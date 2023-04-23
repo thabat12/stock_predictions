@@ -1,5 +1,5 @@
 ---
-title: "predictions_r"
+title: "Classification and Predication: Stock Prices"
 output: html_document
 date: "2023-04-22"
 ---
@@ -8,22 +8,104 @@ date: "2023-04-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+```{r}
+library(tidyverse)
+library(ggcorrplot)
+library(dplyr)
+library(timetk)
+library(ggplot2)
+library(gridExtra)
+```
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## 1. Title & Introduction
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+**Classification and Predication: Stock Prices**
 
-```{r cars}
+By: Abhinav Bichal, Wei-Yu Chiang
+
+**Introduction**
+
+Our data set contains variables of many different stocks with their prices, dates, volume, and a handful of stock indicators. These indicators are our predictor variables and are widely used to analyze stocks, such as the simple moving average, which takes a stock's average price in the past certain number of days, which results in a line. The outcome variable we will try to predict is the closing prices of stocks at the end of the day. All of our stock indicators were personally coded by us and applied to our list of stock that we obtained from yahoo finance. The data is constantly up to date as we are pulling information directly from yahoo finance through an API. We chose this topic because investing is important for retirement and personal financial goals. We wanted to investigate stock market investing with data and how well these stock indicators could predict price. We expect most of our indicators to be strongly correlated with the stock price because they are derived from them. We want to focus on the regression equations that we obtain to analyze how close we can predict the next day's price
+
+**Wei-Yu's Research Question:**
+
+How accurately can we predict the stock price next day from stock indicators with linear regression?
+
+**Abhinav's Research Question:**
+
+Given a particular stock based on sentimental value, can we predict if the price will increase or decrease?
+
+```{r}
 summary(cars)
 ```
 
-## Including Plots
+## 2. Exploratory Data Analysis 
 
-You can also embed plots, for example:
+```{r}
+#grabbing the data
+data <- read.csv('data.csv')
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+# reformatting data
+
+
+
+names(data) <- tolower(names(data))
+
+
+#rename columns
+data <- data %>%
+  na.omit %>%
+  rename('adj_close' = 'adj.close',
+         'macd_signal' = 'macd.signal')
+
+data <- data %>%
+  separate(col='date',into =c('month','day','year'),sep='\\/') %>%
+  unite(date,c('year','month','day'),sep = '-')
+  
+
+data$date <- as.Date(data$date)
+
+data
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+#demonstrating correlation of variables with only Apple stocks
+data %>%
+  filter(ticker =='AAPL') %>%
+  select(-date,-ticker) %>%
+  cor %>%
+  ggcorrplot
+```
+
+# **Correlation Matrix**
+
+The highest correlated variables are the SMA with open, low, high close, and adjusted close which are attributes of a stock price. The same can also be seen with the EMA and stock information. The lowest correlated variables are MACD, MACD SIGNAL, and RSI and stock prices.
+
+# **Visualizations of Relationships cross the Variables** 
+
+**Wei-Yu's Visualizations**
+
+```{r}
+aapl <- data %>%
+  filter(ticker=='AAPL') %>%
+  ggplot()+
+  geom_line(aes(x = date,y=adj_close))
+
+aapl_rsi <- data %>%
+  ggplot(aes(x=date,y=rsi)) +
+  geom_line()
+
+grid.arrange(aapl,aapl_rsi,ncol=1)
+```
+
+```{r}
+
+data %>% 
+  filter(ticker=='AAPL') %>%
+  ggplot() +
+  geom_line(aes(x=date,y=adj_close)) +
+  geom_line(aes(x=date,y=sma),color='red')
+
+```
+
+**Abhinav's Visualizations**
