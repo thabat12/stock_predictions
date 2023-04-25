@@ -80,10 +80,10 @@ aapl <- data %>%
 #creates a lagged column
 
 aapl <- aapl %>% 
-  mutate(lag_adj_close = lag(adj_close,n=1)) %>%
-  mutate(diff = adj_close-lag_adj_close) %>%
+  mutate(lead_adj_close = lead(adj_close,n=1)) %>%
+  mutate(diff = lead_adj_close-adj_close) %>%
   mutate(pos_neg = ifelse(diff > 0,'pos','neg')) %>%
-  select(-lag_adj_close) %>%
+  #select(-lag_adj_close) %>%
   na.omit
   
 ```
