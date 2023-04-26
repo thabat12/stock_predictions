@@ -74,13 +74,13 @@ Given a particular stock based on sentimental value, can we predict if the price
 ## 2. Exploratory Data Analysis
 
 ```{r}
+
+##### WE DON'T NEED THIS ANYMORE #####
+
 #grabbing the data
 data <- read.csv('stock_data_all.csv')
 
 # reformatting data
-
-
-
 names(data) <- tolower(names(data))
 
 
@@ -98,12 +98,47 @@ data <- data %>%
 data$date <- as.Date(data$date)
 ```
 
+### a. Reading in the Data (Stock Adjusted Closing Prices & Sentiment Scores)
+
+The data is derived from Yahoo Finance and we calculated the technical indicators in Python
+
 ```{r}
 
-aapl <- data %>%
-  filter(ticker=='AAPL')
+aapl <- read_csv('aapl_stock.csv')
 
-#making a column for if there was positive or negative gain from the day before
+aapl <- aapl %>%
+  separate(col = 'Date', into = c('year', 'month', 'day'), sep='-') %>%
+  unite(date, c('year', 'month', 'day'), sep = '-')
+
+aapl$date <- as.Date(aapl$date)
+
+aapl <- aapl %>%
+  na.omit %>%
+  rename('adj_close' = 'Adj Close',
+         'macd_new' = 'MACD-NEW',
+         'percent_change' = 'Percent_Changes')
+
+names(aapl) <- tolower(names(aapl))
+
+aapl <- aapl %>%
+  select(-close, -high, -low, -open)
+
+
+# the sentiment scores will be a separate dataset, since
+# we actually do not have values for every day in the sentiment scores to do a full in-depth analysis of its stock prices
+aapl_sentiment <- read_csv('sentiment_aapl.csv')
+
+aapl_sentiment <- aapl_sentiment %>%
+  select(-body) %>%
+  group_by(date) %>%
+  summarize(sentiment_score = mean(sentiment_score))
+
+aapl_sentiment <- inner_join(aapl, aapl_sentiment, by='date')
+```
+
+```{r}
+
+##### WE DON'T NEED THIS ANYMORE #####
 
 #creates a lagged column
 
@@ -116,40 +151,48 @@ aapl <- aapl %>%
   mutate(macd_diff = macd_signal - macd,
          ema_diff = (ema - adj_close) / adj_close) %>%
   select(-sma)
-
 ```
+
+### b. Create a Correlation Matrix
 
 ```{r}
 
+aapl_sentiment <- aapl_sentiment %>%
+  mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
+  select(-sma, -ema)
 
 #demonstrating correlation of variables with only Apple stocks
-aapl %>%
-  select(-date,-ticker,-pos_neg, -open, -close, -high, -low, -lead_adj_close) %>%
+aapl_sentiment %>%
+  select(-date,-ticker, -adj_close, -volume, -sma_diff, -`macd-signal`, -macd) %>%
   cor %>%
   ggcorrplot
 ```
 
 ### **Correlation Matrix**
 
+**we need to change this later but for now i will keep messing around the periods in python to get the best data possible for us**
+
 The highest correlated variables are the SMA with open, low, high close, and adjusted close which are attributes of a stock price. The same can also be seen with the EMA and stock information. The lowest correlated variables are MACD, MACD SIGNAL, Diff, and RSI against stock prices.
 
 # **Visualizations of Relationships cross the Variables**
 
-### **Wei-Yu's Visualizations**
+### **a. Wei-Yu's Visualizations**
+
+#### i. Relative Strength Index Visualization
 
 ```{r}
-
+# we are plotting the RSI values for the first 100 days of stock market data
 aapl_price <- aapl %>%
+  slice(1:100) %>%
   ggplot()+
   geom_line(aes(x = date,y=adj_close))
 
 aapl_rsi <- aapl %>%
+  slice(1:100) %>%
   ggplot(aes(x=date,y=rsi)) +
-  geom_line()
-
-ggplot(data = aapl %>% slice(1:60)) + 
-  geom_point(aes(x = date, y = macd)) + 
-  geom_point(aes(x = date, y = macd_signal, color = 'blue'))
+  geom_line() + 
+  geom_hline(yintercept = 70, linetype='dashed', color = 'orange') +
+  geom_hline(yintercept = 30, linetype='dashed', color = 'orange')
 
 grid.arrange(aapl_price,aapl_rsi, ncol=1)
 ```
@@ -159,6 +202,8 @@ grid.arrange(aapl_price,aapl_rsi, ncol=1)
 The RSI is separated from the graph because it is calculated from the percentage gain/loss of stock prices. Typically, when the RSI is above 70 then the stock is overbought and when the score is below 30 it is oversold. People usually want to sell stocks when it is overbought and buy when the stocks are oversold. Here we can see instances of when the RSI score is very high and is followed with a downward trend because it is overbought.
 
 ![](images/Capture.JPG)
+
+#### ii. Simple Moving Average
 
 ```{r}
 
@@ -174,7 +219,25 @@ data %>%
 
 The simple moving average is calculated based on the prices of previous days. It computes an average and overlaps onto the line graph of price because it is specific to that price. This tool is used to look at upward and downward trends as it allows people to see how the price is performing based on an average. For example, around 2021-07, price (black line) stays above the SMA (red line) for many days because it keeps performing better than its average. We can watch out for when the price crosses the SMA which could indicate price changing directions.
 
-### **Abhinav's Visualizations**
+### **b. Abhinav's Visualizations**
+
+#### iii. Moving Average Convergence/ Divergence (MACD)
+
+```{r}
+
+stock_plot <- aapl %>%
+  slice(1:100) %>%
+  ggplot() +
+  geom_line(aes(x = date, y = adj_close))
+
+macd_plot <- aapl %>%
+  slice(1:100) %>%
+  ggplot() +
+  geom_line(aes(x = date, y = macd)) +
+  geom_line(aes(x = date, y = aapl$macd_signal))
+
+grid.arrange(stock_plot,macd_plot, ncol=1)
+```
 
 ## 3. Prediction and Cross-validation
 
