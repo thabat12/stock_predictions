@@ -8,11 +8,7 @@ date: "2023-04-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-install.packages("caret")
-install.packages("rpart")
-install.packages("rpart.plot")
-install.packages('plotROC')
+```{}
 ```
 
 ```{r}
@@ -46,15 +42,15 @@ Our data set contains variables of many different stocks with their prices, date
 
 We utilized the Yahoo Finance Python API to get up-to-date information on stock prices (under the package name, yfinance). There are 500 stocks selected under the SP500 as of April 2023, and of all these stocks, we retrieved the adjusted closing price information for stocks. The time period that the data is collected from ranges from Jan 1st, 2021 to Apr 20th, 2023. After obtaining closing price information, we used Python to calculate the relevant indicators that should correlate with stock market price increases/ decreases. Here is a list of indicators calculated from our Jupyter Notebook and the potential relationships one might expect:
 
--   Simple Moving Average (10-day period) *longer term price movements*
+-   **Simple Moving Average (10-day period) *longer term price movements***
 
     -   **relationship:** we speculate that stock prices that are upwards from the SMA line generally have a positive momentum, signaling that the stock might continue to uptrend. the converse is assumed for down-trending stocks.
 
--   Exponential Moving Average (10-day period) *shorter term fluctuations captured*
+-   **Exponential Moving Average (10-day period) *shorter term fluctuations captured***
 
     -   **relationship:** exponential moving averages have the same concept of the SMA line, where we attempt to predict general directional trends of stock prices. However, the EMA line places more emphasis on more recent stock price fluctuations, which provide better short-term information on stock price changes. We speculate that stock prices rising above the EMA line will indicate *earlier* that there is an upwards trend in stock price
 
--   Relative Strength Index (14-day period averages)
+-   **Relative Strength Index (14-day period averages)**
 
     ![](images/Capture.JPG)
 
@@ -62,7 +58,7 @@ We utilized the Yahoo Finance Python API to get up-to-date information on stock 
 
     -   **relationship:** the relative strength index is a very common stock market indicator that describes whether a stock price is oversold or overbought based on the value given. Generally, RSI values of 30 or below indicate oversold stock prices, and RSI values of 70 or above indicate overbought. We speculate stock prices with a relatively low RSI value to be correlated with price increases. Vice-versa for high RSI values.
 
--   Moving Average Convergence / Divergence
+-   **Moving Average Convergence / Divergence**
 
     ![](images/macd_img.jpg){width="490"}
 
@@ -83,31 +79,6 @@ How accurately can we predict the stock price next day from stock indicators wit
 Given a particular stock based on sentimental value, can we predict if the price will increase or decrease?
 
 ## 2. Exploratory Data Analysis
-
-```{r}
-
-##### WE DON'T NEED THIS ANYMORE #####
-
-#grabbing the data
-data <- read.csv('stock_data_all.csv')
-
-# reformatting data
-names(data) <- tolower(names(data))
-
-
-#rename columns
-data <- data %>%
-  na.omit %>%
-  rename('adj_close' = 'adj.close',
-         'macd_signal' = 'macd.signal')
-
-data <- data %>%
-  separate(col='date',into =c('year','month','day'),sep='\\/') %>%
-  unite(date,c('year','month','day'),sep = '-')
-  
-
-data$date <- as.Date(data$date)
-```
 
 ### a. Reading in the Data (Stock Adjusted Closing Prices & Sentiment Scores)
 
@@ -167,23 +138,8 @@ aapl_sentiment <- aapl_sentiment %>%
 aapl <- aapl %>%
   mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
   select(-sma, -ema)
-```
 
-```{r}
-
-##### WE DON'T NEED THIS ANYMORE #####
-
-#creates a lagged column
-
-#aapl <- aapl %>% 
-#  mutate(lead_adj_close = lead(adj_close,n=1)) %>%
-#  mutate(diff = lead_adj_close-adj_close) %>%
-#  mutate(pos_neg = ifelse(diff > 0,'pos','neg')) %>%
-#  #select(-lag_adj_close) %>%
-#  na.omit %>% 
-#  mutate(macd_diff = macd_signal - macd,
-#         ema_diff = (ema - adj_close) / adj_close) %>%
-#  select(-sma)
+head(aapl_sentiment)
 ```
 
 ### b. Create a Correlation Matrix
@@ -378,14 +334,27 @@ pred_lin %>%
 ```{r}
 # we are using train control here to make slices based on chronological order
 TimeControl <- trainControl(method = 'timeslice',
-                            initialWindow = 55,
-                            horizon = 55)
+                            initialWindow = 45,
+                            horizon = 10)
 
 # training cross validation model
-train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'lm', trControl = TimeControl)
+lin_cv <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'lm', trControl = TimeControl)
+
+lin_cv
+
 ```
 
-(discuss the results in a paragraph)
+**Time-Series Cross-Validation**
+
+Our cross-validation method had to account for our data being a time-series. We cannot partition our data and scramble them up as there needs to be a certain order since we are accounting for time. This method provides that solution by doing a rolling window of training and testing data. The initial window parameter is set to 45 here which means the first 45 data points are used for training then the 10 data points after that is used for testing.
+
+**Linear Regression CV Results**
+
+The results above does not provide an accuracy because we are attempting to predict a numeric variable and not categorical. Instead we can look at the RMSE of 7.675412 which is very high pertaining to this scenario. This means on average our predictions for the stock's percent change for the day is off by 7.67. The R-Squared value is not a very favorable measure in determining the strength of our model because we are dealing with factors such as trends and non-stationary values that grow over time.
+
+**Over fitting**
+
+These results do not seem to over fit because the stock market is something very hard to predict as prices are affect by numerous reasons that do not just pertain to mathematical indicators. In fact we could be under fitting as our model does not do a good job of predicting and this could be due to the model we used to fit out data. A potential better alternative could be polynomial regression as it allows for more flexibility of price movements which is advantageous if you look at how stock prices move so sporadically.
 
 ### b. Abhinav Bichal's Predictions
 
@@ -423,8 +392,9 @@ Reflection of AUC score: We got an excellent AUC score, but we should also keep 
 
 ```{r}
 # we are using train control here to make slices based on chronological order
-TimeControl <- trainControl(method = 'cv',
-                            number = 10)
+TimeControl <- trainControl(method = 'timeslice',
+                            initialWindow = 45,
+                            horizon = 10)
 
 # training cross validation model
 rpart_cv <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'rpart', trControl = TimeControl)
@@ -447,7 +417,7 @@ Now, to answer the questions on the document:
 
 ### c. Comparing Decision Trees to Linear Regression - Which Model is More Reliable?
 
-(we need to talk about this here)
+Comparing the two models, we would go with linear regression as the better one because of it's lower RMSE score. The lower the score means the closer our predictions come to the actual data.
 
 ## 4. Dimensionality Reduction
 
