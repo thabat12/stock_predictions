@@ -29,6 +29,7 @@ library(cluster)
 library(caret)
 library(rpart)
 library(plotROC)
+library(rpart.plot)
 ```
 
 ## 1. Title & Introduction
@@ -174,15 +175,15 @@ aapl <- aapl %>%
 
 #creates a lagged column
 
-aapl <- aapl %>% 
-  mutate(lead_adj_close = lead(adj_close,n=1)) %>%
-  mutate(diff = lead_adj_close-adj_close) %>%
-  mutate(pos_neg = ifelse(diff > 0,'pos','neg')) %>%
-  #select(-lag_adj_close) %>%
-  na.omit %>% 
-  mutate(macd_diff = macd_signal - macd,
-         ema_diff = (ema - adj_close) / adj_close) %>%
-  select(-sma)
+#aapl <- aapl %>% 
+#  mutate(lead_adj_close = lead(adj_close,n=1)) %>%
+#  mutate(diff = lead_adj_close-adj_close) %>%
+#  mutate(pos_neg = ifelse(diff > 0,'pos','neg')) %>%
+#  #select(-lag_adj_close) %>%
+#  na.omit %>% 
+#  mutate(macd_diff = macd_signal - macd,
+#         ema_diff = (ema - adj_close) / adj_close) %>%
+#  select(-sma)
 ```
 
 ### b. Create a Correlation Matrix
@@ -208,7 +209,7 @@ Overall, the highest correlations are present with MACD indicators and whether a
 
 ### **a. Wei-Yu's Visualizations**
 
-#### i. Stock Price, Relative Strength Index, and Average Price of Stock Two Weeks from the Current Day 
+#### i. Stock Price, Relative Strength Index, and Average Price of Stock Two Weeks from the Current Day
 
 ```{r}
 # we are plotting the RSI values for the first 100 days of stock market data
@@ -256,7 +257,7 @@ The simple moving average is calculated based on the prices of previous days. It
 
 ### **b. Abhinav's Visualizations**
 
-#### iii. Sentiment Score Visualizations 
+#### iii. Sentiment Score Visualizations
 
 We were curious to see if sentiment scores from Reddit reflect anything about future prices of the stock market. However, after looking at these visualizations, one thing we learned is that using social media (specifically Reddit) to measure stock prices is usually not a good idea!
 
@@ -283,7 +284,7 @@ grid.arrange(stock_plot,sentiment_plot, ncol=1)
 
 As stock prices go down, we are able to see a relative sharp spike down in sentiment scores. However, anytime else sentiment scores are usually very random and that is due to sampling errors that we may have got from the sentiment score data. This is a great moment to realize that *using social media such as Reddit to make financial decisions related to buying stocks is not a good idea.* Although we were a bit disappointed that these sentiment scores are not very clear in their relationship with stock prices, we know now that social media for stock prices is not a good reference to look at. Maybe we should consider better sources for stock price predictions in the future.
 
-#### iv. RSI and MACD Relationship with Price Changes 
+#### iv. RSI and MACD Relationship with Price Changes
 
 Taking the two most correlated variables in the correlation plot, we can inspect the relationship between RSI, MACD, and whether the stock was a good buy along with the corresponding percent change of that stock price.
 
@@ -444,7 +445,7 @@ Now, to answer the questions on the document:
 
     -   we might want to consider including more ticker symbols in the future for better predictions and **higher variance** in the future to try to fit stock market data better, but bringing in more data might also add on to the noise in our stock market data.
 
-### c. Comparing Decision Trees to Linear Regression - Which Model is More Reliable? 
+### c. Comparing Decision Trees to Linear Regression - Which Model is More Reliable?
 
 (we need to talk about this here)
 
