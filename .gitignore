@@ -9,3 +9,4 @@
 # these are the exceptions to gitignore
 !predictions/stock_data_all.csv 
 !sentiment_aapl.csv
+!predictions/*.csv
