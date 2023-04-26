@@ -1,2 +1,11 @@
 # ignore all .csv files
 *.csv
+# ignore all ipynb checkpoint files
+*.ipynb_checkpoints
+# ignore all .RData output stuff
+*.RData 
+*.Rhistory
+
+# these are the exceptions to gitignore
+!predictions/stock_data_all.csv 
+!sentiment_aapl.csv
