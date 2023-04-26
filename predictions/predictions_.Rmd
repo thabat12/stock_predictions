@@ -9,6 +9,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+install.packages("caret")
+install.packages("rpart")
+install.packages("rpart.plot")
+install.packages('plotROC')
+```
+
+```{r}
 library(tidyverse)
 library(ggcorrplot)
 library(dplyr)
@@ -19,6 +26,9 @@ library(Metrics)
 library(caret)
 library(factoextra)
 library(cluster)
+library(caret)
+library(rpart)
+library(plotROC)
 ```
 
 ## 1. Title & Introduction
@@ -100,28 +110,35 @@ data$date <- as.Date(data$date)
 
 ### a. Reading in the Data (Stock Adjusted Closing Prices & Sentiment Scores)
 
-The data is derived from Yahoo Finance and we calculated the technical indicators in Python
+The data is derived from Yahoo Finance and we calculated the technical indicators in Python. Sentiment data is derived from Vader Sentiment Analysis scores off of Reddit data in "r/stocks". The stocks are classified in this project as either being a "good buy" or not. To be a "good buy" stock, the price must increase by at least 3% in the next two week period. If not, the stock is not considered to be a good buy.
 
 ```{r}
-
+# reading in the data given to us
 aapl <- read_csv('aapl_stock.csv')
 
+# creating the datetime columns for convenience in R ggplot functions
 aapl <- aapl %>%
   separate(col = 'Date', into = c('year', 'month', 'day'), sep='-') %>%
   unite(date, c('year', 'month', 'day'), sep = '-')
-
+# casting to date type
 aapl$date <- as.Date(aapl$date)
 
+# renaming some columns to be consistent in styling
 aapl <- aapl %>%
   na.omit %>%
   rename('adj_close' = 'Adj Close',
          'macd_new' = 'MACD-NEW',
-         'percent_change' = 'Percent_Changes')
-
+         'percent_change' = 'Percent_Changes',
+         'macd_signal'='MACD-SIGNAL')
 names(aapl) <- tolower(names(aapl))
 
+# removing the unessecary columns from the dataframe
 aapl <- aapl %>%
   select(-close, -high, -low, -open)
+
+# *** classifying stocks as either a good buy or not, given the threshold of being able to increase by at least 3 percent
+aapl <- aapl %>%
+  mutate(good_buy = ifelse(percent_change > 3, T, F))
 
 
 # the sentiment scores will be a separate dataset, since
@@ -133,7 +150,22 @@ aapl_sentiment <- aapl_sentiment %>%
   group_by(date) %>%
   summarize(sentiment_score = mean(sentiment_score))
 
+# merging sentiment scores with the aapl dataset, and we will be using this for using models that will calculate sentiment scores but for visualizing stock data, we will use the original dataset 
 aapl_sentiment <- inner_join(aapl, aapl_sentiment, by='date')
+
+# here, we are mutating the difference for EMA and SMA scores because that is what really matters for this analysis
+aapl_sentiment <- aapl_sentiment %>%
+  mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
+  select(-sma, -ema)
+
+# one last thing that we want to keep account of is the difference between the simple and exponential moving averages. this is because having both SMA and EMA as data inputs is quite redundant, but knowing the difference might tell us whether the stock price is beginning to diverge significantly or not
+aapl_sentiment <- aapl_sentiment %>%
+  mutate(ema_sma_diff = ema_diff - sma_diff)
+
+# selecting out the bad variables from aapl
+aapl <- aapl %>%
+  mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
+  select(-sma, -ema)
 ```
 
 ```{r}
@@ -155,30 +187,28 @@ aapl <- aapl %>%
 
 ### b. Create a Correlation Matrix
 
-```{r}
+We will consider all variables for the correlation analysis in order to see whether stocks are a good buy or not. We removed the date, ticker, and adjusted close values because these data points are not generally correlated with any indicators, since their values may be arbitrary. We did include the two macd signals because they revealed to be correlated in some significant way with whether the stock was a good buy, and that might lead us to some interesting findings. However, it is important to note that the macd signal and macd line will naturally be correlated to each other since they do generally follow each other, but we should ignore this fact in this graph.
 
-aapl_sentiment <- aapl_sentiment %>%
-  mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
-  select(-sma, -ema)
+```{r}
 
 #demonstrating correlation of variables with only Apple stocks
 aapl_sentiment %>%
-  select(-date,-ticker, -adj_close, -volume, -sma_diff, -`macd-signal`, -macd) %>%
+  select(-date,-ticker, -adj_close, -ema_diff, -sma_diff) %>%
   cor %>%
   ggcorrplot
 ```
 
 ### **Correlation Matrix**
 
-**we need to change this later but for now i will keep messing around the periods in python to get the best data possible for us**
+The highest correlated variables are macd and macd-signal, but that is expected because of the fact that these lines are similary calculated. Looking past that, we want to pay attention to "good_buy", because that is the variable that tells us whether the stock price increases by over 3% in the next 2 weeks. When taking a look at this, we notice that a stock being a good buy is relatively more corrrelated with "macd", "macd_signal", and "percent_change" (this is obviously the most correlated since that indicates the percent change". There is a slight positive correlation with "macd_new", which is our own calculated indicatior that tells us the "strength" of a macd line crossing or not. Another variable to consider is the sentiment score. This score will calculate the sentiment of users on Reddit about a particular stock on a certain day. We notice that this variable is not very correlated with any others, so that is not a good sign for our prediction model.
 
-The highest correlated variables are the SMA with open, low, high close, and adjusted close which are attributes of a stock price. The same can also be seen with the EMA and stock information. The lowest correlated variables are MACD, MACD SIGNAL, Diff, and RSI against stock prices.
+Overall, the highest correlations are present with MACD indicators and whether a stock is a good buy, and the lowest correlation is generally between any pair of indicators that are used with the sentiment scores.
 
-# **Visualizations of Relationships cross the Variables**
+# **Visualizations of Relationships across the Variables**
 
 ### **a. Wei-Yu's Visualizations**
 
-#### i. Relative Strength Index Visualization
+#### i. Stock Price, Relative Strength Index, and Average Price of Stock Two Weeks from the Current Day 
 
 ```{r}
 # we are plotting the RSI values for the first 100 days of stock market data
@@ -194,25 +224,30 @@ aapl_rsi <- aapl %>%
   geom_hline(yintercept = 70, linetype='dashed', color = 'orange') +
   geom_hline(yintercept = 30, linetype='dashed', color = 'orange')
 
-grid.arrange(aapl_price,aapl_rsi, ncol=1)
+percent_change <- aapl %>%
+  slice(1:100) %>%
+  ggplot(aes(x = date, y = percent_change)) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = 'red')
+
+grid.arrange(aapl_price,aapl_rsi,percent_change, ncol=1)
 ```
 
 **Relative Strength Index**
 
-The RSI is separated from the graph because it is calculated from the percentage gain/loss of stock prices. Typically, when the RSI is above 70 then the stock is overbought and when the score is below 30 it is oversold. People usually want to sell stocks when it is overbought and buy when the stocks are oversold. Here we can see instances of when the RSI score is very high and is followed with a downward trend because it is overbought.
+The RSI is separated from the graph because it is calculated from the percentage gain/loss of stock prices. Typically, when the RSI is above 70 then the stock is overbought and when the score is below 30 it is oversold. People usually want to sell stocks when it is overbought and buy when the stocks are oversold. Here we can see instances of when the RSI score is very high and is followed with a downward trend because it is overbought. One interesting pattern to notice is that whenever the RSI value is greater than the threshold of 70, we notice that 2 weeks from that current day, the stock price generally is negative in value. Whenever the RSI is below 30, the stock price 2 weeks from that day is actually in the positive. This is a good sign that our indicators are working and that RSI may allow us to determine when stock prices are going to increase or decrease in the future.
 
 ![](images/Capture.JPG)
 
 #### ii. Simple Moving Average
 
 ```{r}
-
 data %>% 
   filter(ticker=='AAPL') %>%
+  slice(100:200) %>%
   ggplot() +
   geom_line(aes(x=date,y=adj_close)) +
   geom_line(aes(x=date,y=ema),color='red')
-
 ```
 
 **Simple Moving Average**
@@ -221,105 +256,239 @@ The simple moving average is calculated based on the prices of previous days. It
 
 ### **b. Abhinav's Visualizations**
 
-#### iii. Moving Average Convergence/ Divergence (MACD)
+#### iii. Sentiment Score Visualizations 
+
+We were curious to see if sentiment scores from Reddit reflect anything about future prices of the stock market. However, after looking at these visualizations, one thing we learned is that using social media (specifically Reddit) to measure stock prices is usually not a good idea!
 
 ```{r}
 
 stock_plot <- aapl %>%
-  slice(1:100) %>%
+  slice(150:200) %>%
   ggplot() +
-  geom_line(aes(x = date, y = adj_close))
+  geom_line(aes(x = date, y = adj_close)) +
+  labs(title = 'Actual Stock Price of AAPL',
+       x = 'Date',
+       y = 'Adjusted Closing Price')
 
-macd_plot <- aapl %>%
-  slice(1:100) %>%
-  ggplot() +
-  geom_line(aes(x = date, y = macd)) +
-  geom_line(aes(x = date, y = aapl$macd_signal))
+sentiment_plot <- aapl_sentiment %>%
+  slice(100:200) %>%
+  ggplot(aes(x = date, y = sentiment_score)) +
+  geom_line() + 
+  labs(title = 'Corresponding Average Sentiment Score of r/stocks Subreddit',
+       x = 'Date',
+       y = 'Average Sentiment Score (VADER)')
 
-grid.arrange(stock_plot,macd_plot, ncol=1)
+grid.arrange(stock_plot,sentiment_plot, ncol=1)
 ```
+
+As stock prices go down, we are able to see a relative sharp spike down in sentiment scores. However, anytime else sentiment scores are usually very random and that is due to sampling errors that we may have got from the sentiment score data. This is a great moment to realize that *using social media such as Reddit to make financial decisions related to buying stocks is not a good idea.* Although we were a bit disappointed that these sentiment scores are not very clear in their relationship with stock prices, we know now that social media for stock prices is not a good reference to look at. Maybe we should consider better sources for stock price predictions in the future.
+
+#### iv. RSI and MACD Relationship with Price Changes 
+
+Taking the two most correlated variables in the correlation plot, we can inspect the relationship between RSI, MACD, and whether the stock was a good buy along with the corresponding percent change of that stock price.
+
+```{r}
+aapl_sentiment %>%
+  ggplot(aes(x = sentiment_score, y = percent_change, shape = good_buy)) +
+  geom_point()
+
+aapl_sentiment %>%
+  ggplot(aes(x = rsi, y = macd, color = percent_change)) + 
+  geom_point(aes(shape = good_buy)) +
+  geom_smooth(method = 'lm') + 
+  labs(title = 'RSI and MACD Lines for Good and Bad Stock Purchases',
+       x = 'Relative Strength Index',
+       y = 'Moving Average Convergence/ Divergence')
+```
+
+From the visualization above, we realize that there is actually a very interesting trend of RSI values and MACD! As RSI increases, we notice that MACD also increases, and that makes sense because both indicators are calculated using exponential weighted means. However, one trend that is interesting is that above this linear regression line of RSI and MACD, we mostly have "BAD" stocks, and below this line, we mostly have "GOOD" stocks. This means that above the regression line we notice stocks that generally go down and below are stocks that go up.
+
+This is a complicated relationship, so here is a bullet point list of each interaction that is going on here:
+
+-   lower MACD values generally have better stocks to buy, why?
+
+    -   because lower MACD lines typically indicate that a stock is also being oversold, and if a stock is oversold, it will generally rise in price
+
+    -   The same argument goes for higher MACD lines
+
+-   MACD is correlated with RSI in a general upwards trend, why?
+
+    -   same point as above, but lower lines typically represent oversold stocks, and that also corresponds to lower RSI values, which are ALSO oversold stocks!
+
+-   GOOD buy stocks are below the regression line, and BAD buy stocks are above, why?
+
+    -   For any given RSI value, we know that being lower (around 30) generally means that stock prices have a tendency to increase. Now, with MACD values which are ALSO lower, we have a consensus on two types of indicators. Because both indicators agree on this stock being oversold, we have a higher probability that the stock price is indeed oversold, meaning that the price is MORE LIKELY to tend upwards!
+
+    -   So for any given RSI value that is low, an even lower MACD value (below regression line) more strongly indicates that the stock is being oversold. The stock is more likely to tend upwards due to this, hence we see more stocks as a good buy underneath this line!
 
 ## 3. Prediction and Cross-validation
 
-### **Wei-Yu's Prediction**
+### **a. Wei-Yu's Prediction**
+
+#### i. Predicting Stock Prices 2 Weeks From the Current Day Using a Linear Model
+
+For predicting stock prices, we are predicting prices 2 weeks from
 
 ```{r}
+# predicting the percent change of stock prices given the following indicators
+fit_lin <- lm(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl)
 
-fit_lin <- lm(diff~ema_diff + rsi + volume + macd_diff + adj_close, data = aapl)
+# summary of the model: volume, macd, and macd_signal are the most significant variables for prediction for this linear model, that is something interesting
+summary(fit_lin)
 
-
+# get predicted price change % 2 weeks from the current date
 pred_lin <- aapl %>%
   mutate(predictions = predict(fit_lin)) %>%
-  select(adj_close,predictions,date,diff)
+  select(percent_change,predictions,date)
 
+# plot actual price change vs. predicted price change in 2 weeks 
 pred_lin %>% 
   ggplot() +
-  geom_line(aes(x=date,y=diff)) +
+  geom_line(aes(x=date,y=percent_change)) +
   geom_line(aes(x=date,y=predictions),color='red')
 
-rmse(pred_lin$adj_close,pred_lin$predictions)
+# the predicted error for new data being seen, the Root mean squared error
+rmse(pred_lin$percent_change,pred_lin$predictions)
 
+# the R^2 statistic is pretty low, meaning that only 19% of the variance of stock prices are explained by the model's performance
 summary(fit_lin)$r.squared
 ```
 
 **(First 60 days of graph above)**
 
+for a more detailed view of a certain period of days:
+
 ```{r}
+# slicing the graph for a smaller window
 pred_lin %>% 
-  slice(1:60) %>%
-  ggplot() +
-  geom_line(aes(x=date,y=diff)) +
-  geom_line(aes(x=date,y=predictions),color='red')
+  slice(80:160) %>%
+  ggplot(aes(color = 'Type')) +
+  geom_line(aes(x=date,y=percent_change, color = 'black')) +
+  geom_line(aes(x=date,y=predictions),color='red') +
+  geom_hline(yintercept = 0, linetype='dashed', color = 'orange') + 
+  scale_color_manual(name = 'Type', 
+                     values = c('Actual Price' = 'black', 'Predicted' = 'red'),
+                     labels = c('Actual Price', 'Predicted'))
+  
 ```
 
-### Cross-validation
+#### ii. Cross Validation of Linear Regression Model
 
 ```{r}
-#seed <- set.seed(10)
+# we are using train control here to make slices based on chronological order
 TimeControl <- trainControl(method = 'timeslice',
                             initialWindow = 55,
                             horizon = 55)
 
-
-train(adj_close~sma + ema + macd_diff + rsi + volume,
-      data = aapl,
-      method = 'lm',
-      trControl = TimeControl
-)
-
-
+# training cross validation model
+train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'lm', trControl = TimeControl)
 ```
+
+(discuss the results in a paragraph)
+
+### b. Abhinav Bichal's Predictions
+
+#### iii. Predicting Whether a Stock is a Good Buy or Not Using Indicator Data
+
+```{r}
+# creating the decision tree here
+stock_tree <- rpart(good_buy ~ volume + rsi + macd + macd_new + sma_diff + ema_diff, data = aapl)
+
+# taking a look at the decision tree for a good or bad stock price prediction result
+rpart.plot(stock_tree)
+```
+
+```{r}
+prediction_results <- data.frame(predictions = predict(stock_tree, aapl), actual = ifelse(aapl$good_buy == T, 1, 0))
+
+# the ROC curve does provide some predictive power/ value for a prediction of a good stock buy/ sell. 
+ROC <- prediction_results %>%
+  ggplot() +
+  geom_roc(aes(d = actual, m = predictions), n.cuts = 10)
+
+ROC 
+```
+
+```{r}
+# calculating the area under the curve
+paste('area under the curve: ', calc_auc(ROC)$AUC)
+
+# we got an excellent ROC score! An ROC ascore betweeen 0.8 - 0.9 is a great number to get for prediction of stock prices (whether we have a good or bad stock purchase)
+```
+
+Reflection of AUC score: We got an excellent AUC score, but we should also keep in mind that this AUC score is calculated on the training data, which we already seen before. The model is good at training on itself, but may be prone to overfitting on its own data. In order to determine the general performance of our model on other datasets, it is worth performing cross-validation (which is the next part).
+
+#### iv. Performing Cross Validation with Decision Trees
+
+```{r}
+# we are using train control here to make slices based on chronological order
+TimeControl <- trainControl(method = 'cv',
+                            number = 10)
+
+# training cross validation model
+rpart_cv <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'rpart', trControl = TimeControl)
+
+# taking a look at the cross-validation results
+rpart_cv
+```
+
+**Summary:** The results of the classification model decision tree using a 6 fold cross validation score is shown above. The model is built using 500 stock market data points and 7 predictor variables. The cross validation results are summarized using 3 different cost complexity parameters. The model metrics are summarized on average for C.V. using the three different metrics, Root Mean Squared-Error, R-squared value, and Mean Absolute Error. As we can see, the lowest MAE, highest R\^2, and lowest RMSE is generally tending towards the complexity parameter being equal to 0.0472... This shows us that generally *larger* decision trees perform better with the nature of this data.
+
+Overall, the model is not very good at predicting new observations. At best, the model may explain about 10% of the variation (R\^2 value of the best scoring cp model), which is not terrible in the sense that the model is completely "clueless", but it is also not a very reliable decision maker for predicting stock prices.
+
+Now, to answer the questions on the document:
+
+-   are there any signs of overfitting?
+
+    -   There is a sign of overfitting. The model performs surprisingly well when trained on all data points and calculating the ROC of itself. However, under cross validation scores, we notice a significant drop in performance, indicating the that model is not very good at adapting to new sorts of stock market data.
+
+    -   we might want to consider including more ticker symbols in the future for better predictions and **higher variance** in the future to try to fit stock market data better, but bringing in more data might also add on to the noise in our stock market data.
+
+### c. Comparing Decision Trees to Linear Regression - Which Model is More Reliable? 
+
+(we need to talk about this here)
 
 ## 4. Dimensionality Reduction
 
 **Additional Data Preparation**
 
-```{r}
+In order to perform PCA, we must do the following steps:
 
+1.  prepare the data by centering and scaling the data
+2.  performing PCA using prcomp() on the prepared variables
+3.  selecting the number of principal components to make an explained variance plot
+    1.  we generally want to select PCs that correspond to 70-100% of the model variance if we want to generalize our observations
+4.  find the PC scores and visualize the first two PCs
+
+```{r}
+# change volume data type as a double
 aapl$volume <- as.double(aapl$volume)
 
+# now, only select the numeric variables and remove the unecessary data. NOTE: percent change is also being taken out because this is not something that is known in real time, and therefore that is a prediction variable that we should NOT consider.
 aapl_scaled <- aapl %>%
   select_if(is.double) %>%
-  select(!(1:6)) %>%
-  select(-diff) %>%
+  select(!(1:2)) %>%
+  select(-percent_change) %>%
   scale %>%
   as.data.frame
 
+# taking a look at how the dataset looks like so far...
 head(aapl_scaled)
 ```
 
 ```{r}
+# simply perform PCA on this numerical dataset now
 pca <- aapl_scaled %>%
   prcomp
 
-
+# we realize that much of the model variance is retained at around 70%
 fviz_eig(pca, addlabels = TRUE, ylim = c(0, 60))
-
 ```
 
-**We will keep the first two principal components for total of 79.6% explained variance.**
+**We will keep the first two principal components for total of 71.6% explained variance. These are the explained variances for our first two principal components.**
 
 ```{r}
+# PCA of AAPL Stock Indices
 fviz_pca_ind(pca) 
 ```
 
@@ -327,24 +496,48 @@ fviz_pca_ind(pca)
 
 **PAM Clustering**
 
-```{r}
+We decided to use the PAM clustering algorithm because PAM clustering is less sensitive to outlier data because the medioid points are actually just the points themselves. If we were to use K-means, outliers could skew the clustering towards either extreme ends of our data, which is not what we would like.
 
+```{r}
 fviz_nbclust(aapl_scaled, pam, method = "silhouette")
 ```
 
 **We will choose to use two clusters.**
+
+Two clusters seem to be ideal due to the high dropoff of silhouette width after 2 clusters.
 
 ```{r}
 pam_results <- aapl_scaled %>%
   pam(k = 2)
 
 fviz_cluster(pam_results)
-
 ```
 
+#### Summary statistics of our two different clusters
+
 ```{r}
-aapl  %>%
+aapl %>%
   mutate(cluster = as.factor(pam_results$clustering)) %>%
   group_by(cluster) %>%
   summarize_if(is.numeric, mean, na.rm = T)
 ```
+
+## 6. Discussion
+
+here we should include these points:
+
+-   our models capture general trends of stock prices for this particular case
+
+-   MACD and RSI values are significant predictors for linear regression
+
+-   Sentiment Scores are almost worthless for our stock market analysis
+
+-   We should reflect on the process of conducting the project
+
+    -   generating our own stock market data and using APIs was very interesting
+
+    -   using github to work together is was helpful
+
+-   our individual contribution parts: abhinav talks about his models and draws conclusions from them, wei-yu does the same and we all answer our research questions
+
+-   the rest of the discussion should be about our pam clustering, how well our trained models predict stock prices, and how RSI and MACD values were automatically inferred and good vs. bad stock prices were also separated well
