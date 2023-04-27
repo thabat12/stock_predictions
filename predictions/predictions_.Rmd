@@ -1,14 +1,17 @@
 ---
-title: "Classification and Predication: Stock Prices"
-output: html_document
+title: 'Classification and Predication: Stock Prices'
+output:
+  html_document: default
+  pdf_document: default
 date: "2023-04-22"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+# knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 library(tidyverse)
 library(ggcorrplot)
 library(dplyr)
@@ -175,7 +178,7 @@ head(aapl_sentiment)
 
 We will consider all variables for the correlation analysis in order to see whether stocks are a good buy or not. We removed the date, ticker, and adjusted close values because these data points are not generally correlated with any indicators, since their values may be arbitrary. We did include the two macd signals because they revealed to be correlated in some significant way with whether the stock was a good buy, and that might lead us to some interesting findings. However, it is important to note that the macd signal and macd line will naturally be correlated to each other since they do generally follow each other, but we should ignore this fact in this graph.
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 #demonstrating correlation of variables with only Apple stocks
 aapl_sentiment %>%
   select(-date,-ticker, -adj_close, -ema_diff, -sma_diff) %>%
@@ -197,7 +200,7 @@ Overall, the highest correlations are present with MACD indicators and whether a
 
 #### i. Stock Price, Relative Strength Index, and Average Price of Stock Two Weeks from the Current Day
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # we are plotting the RSI values for the first 100 days of stock market data
 aapl_price <- aapl %>%
   slice(1:100) %>%
@@ -231,7 +234,7 @@ The RSI is separated from the graph because it is calculated from the percentage
 
 #### ii. Simple Moving Average
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 aapl %>% 
   slice(0:300) %>%
   ggplot() +
@@ -253,7 +256,7 @@ The simple moving average is calculated based on the prices of previous days. It
 
 Because we did create our own technical indicator from MACD signals, we want to see if this indicator has any meaning or if there is simply just too much noise for the indicator. In order to do this, compared the distribution of the MACD-NEW values with whether a stock is a good buy or not. To also understand this in terms of other technical indicators, we also added a couple more variables in the graph to see what variables truly are better indicators for telling us if a stock is a good buy or not.
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # making 3 similar box plots for side-by-side visualization 
 md_new_plot <- aapl %>%
   ggplot(aes(x = macd_new)) + 
@@ -279,7 +282,7 @@ grid.arrange(md_new_plot, md_plot, rsi_plot, ncol=1, nrow=3)
 
 Except for the MACD singal having a lower median value below 0 for good buy stocks, the technical indicators seem to have no real signficant difference in population distributions for whether a stock is a good buy or not. However, when we do take a look at stock market data, we notice that these indicators are indeed related to price movements of stocks and future movements as well. One reason to explain why this happens is because stock market prices are very prone to fluctuation, and there are plenty of different sorts of market conditions (bull vs bear runs) for stock prices. These fluctuations ultimately mean that stock market indicators cannot be the final verdict for generalizing stock price movements for *any* time of year. And this is actually very true if we take a look at one more visualization:
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 price <- ggplot(aapl %>% slice(100:200), aes(x = date, y = adj_close)) +
   geom_line() + 
   labs(title = 'Stock Price (Above) and MACD-NEW (Below)')
@@ -296,7 +299,7 @@ grid.arrange(price, md_new, ncol=1)
 
 Taking the two most correlated variables in the correlation plot, we can inspect the relationship between RSI, MACD, and whether the stock was a good buy along with the corresponding percent change of that stock price.
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # checking to 
 aapl %>%
   mutate(good_buy = factor(good_buy, levels = c(T, F), labels = c('GOOD BUY', 'BAD BUY'))) %>%
@@ -344,7 +347,7 @@ This is a complicated relationship, so here is a bullet point list of each inter
 
 For predicting stock prices, we are predicting prices 2 weeks from
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # predicting the percent change of stock prices given the following indicators
 fit_lin <- lm(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl)
 
@@ -375,7 +378,7 @@ summary(fit_lin)$r.squared
 
 for a more detailed view of a certain period of days:
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # slicing the graph for a smaller window
 pred_lin %>% 
   slice(80:160) %>%
@@ -398,7 +401,7 @@ pred_lin %>%
 
 -   seasonal changes to stock market conditions l
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # we are using train control here to make slices based on chronological order
 TimeControl <- trainControl(method = 'timeslice',
                             initialWindow = 45,
@@ -432,7 +435,7 @@ These results do not seem to over fit because the stock market is something very
 
 #### iii. Predicting Whether a Stock is a Good Buy or Not Using Indicator Data
 
-```{r}
+```{r, message=FALSE, fig.height=4, fig.width=9}
 # creating the decision tree here
 stock_tree <- rpart(good_buy ~ volume + rsi + macd + macd_new + sma_diff + ema_diff, data = aapl)
 
@@ -644,24 +647,6 @@ Overall, here is a general summary of our model and the variables that are invol
 Abhinav Bichal (data preparation, classification, cross validation)
 
 Wei-Yu Chiang (linear regression, clustering, cross validation)
-
-References for stock market indicators:
-
-1.  MACD Calculation:
-
-Source: Investopedia. "Moving Average Convergence Divergence (MACD)." [**https://www.investopedia.com/terms/m/macd.asp**](https://www.investopedia.com/terms/m/macd.asp)
-
-2.  RSI Calculation:
-
-Source: Investopedia. "Relative Strength Index - RSI." [**https://www.investopedia.com/terms/r/rsi.asp**](https://www.investopedia.com/terms/r/rsi.asp)
-
-3.  SMA Calculation:
-
-Source: Investopedia. "Simple Moving Average (SMA)." [**https://www.investopedia.com/terms/s/sma.asp**](https://www.investopedia.com/terms/s/sma.asp)
-
-4.  EMA Calculation:
-
-Source: Investopedia. "Exponential Moving Average (EMA)." [**https://www.investopedia.com/terms/e/ema.asp**](https://www.investopedia.com/terms/e/ema.asp)
 
 *About yfinance data and Python usage:*
 During the course of our project, we used Python for data collection under Yahoo Finance. Both members of the group learned Python through self teaching and also through college classes that go over data science concepts in Python (Abhinav learned Python through Big Data in Biology FRI stream, and Wei-Yu through online classes going over data science in finance). Despite our different backgrounds, we were able to collaborate effectively using our combined skills and experience. Python packages of Pandas and scikit were used to manipulate and engineer stock market data.

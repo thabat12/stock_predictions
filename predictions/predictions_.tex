@@ -1,0 +1,1786 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Classification and Predication: Stock Prices},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Classification and Predication: Stock Prices}
+\author{}
+\date{\vspace{-2.5em}2023-04-22}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'tidyverse' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'ggplot2' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tibble' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tidyr' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'readr' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'purrr' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'dplyr' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'stringr' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'forcats' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'lubridate' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+## v dplyr     1.1.2     v readr     2.1.4
+## v forcats   1.0.0     v stringr   1.5.0
+## v ggplot2   3.4.2     v tibble    3.2.1
+## v lubridate 1.9.2     v tidyr     1.3.0
+## v purrr     1.0.1     
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+## i Use the ]8;;http://conflicted.r-lib.org/conflicted package]8;; to force all conflicts to become errors
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggcorrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'ggcorrplot' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\FunctionTok{library}\NormalTok{(timetk)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'timetk' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(gridExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'gridExtra' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gridExtra'
+## 
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(Metrics)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'Metrics' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'caret' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: lattice
+## 
+## Attaching package: 'caret'
+## 
+## The following objects are masked from 'package:Metrics':
+## 
+##     precision, recall
+## 
+## The following object is masked from 'package:purrr':
+## 
+##     lift
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(factoextra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'factoextra' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{verbatim}
+## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(cluster)}
+\FunctionTok{library}\NormalTok{(caret)}
+\FunctionTok{library}\NormalTok{(rpart)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'rpart' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(plotROC)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'plotROC' was built under R version 4.2.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(rpart.plot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'rpart.plot' was built under R version 4.2.3
+\end{verbatim}
+
+\hypertarget{title-introduction}{%
+\subsection{1. Title \& Introduction}\label{title-introduction}}
+
+\hypertarget{classification-and-prediction-predicting-stock-prices-of-aapl-using-technical-indicators}{%
+\subsubsection{\texorpdfstring{\textbf{Classification and Prediction:}
+Predicting Stock Prices of AAPL Using Technical
+Indicators}{Classification and Prediction: Predicting Stock Prices of AAPL Using Technical Indicators}}\label{classification-and-prediction-predicting-stock-prices-of-aapl-using-technical-indicators}}
+
+By: Abhinav Bichal, Wei-Yu Chiang
+
+\hypertarget{a.-introduction}{%
+\subsubsection{\texorpdfstring{\textbf{a.
+Introduction}}{a. Introduction}}\label{a.-introduction}}
+
+Our data set contains variables of many different stocks with their
+prices, dates, volume, and a handful of stock indicators. These
+indicators are our predictor variables and are widely used to analyze
+stocks, such as the simple moving average, which takes a stock's average
+price in the past certain number of days, which results in a line. The
+outcome variable we will try to predict is the closing prices of stocks
+at the end of the day. All of our stock indicators were personally coded
+by us and applied to our list of stock that we obtained from yahoo
+finance. The data is constantly up to date as we are pulling information
+directly from yahoo finance through an API. We chose this topic because
+investing is important for retirement and personal financial goals. We
+wanted to investigate stock market investing with data and how well
+these stock indicators could predict price. We expect most of our
+indicators to be strongly correlated with the stock price because they
+are derived from them. We want to focus on the regression equations that
+we obtain to analyze how close we can predict the next day's price.
+
+\hypertarget{b.-describing-the-dataset}{%
+\subsubsection{b. Describing the
+dataset}\label{b.-describing-the-dataset}}
+
+We utilized the Yahoo Finance Python API to get up-to-date information
+on stock prices (under the package name, yfinance). There are 500 stocks
+selected under the SP500 as of April 2023, and of all these stocks, we
+retrieved the adjusted closing price information for stocks. The time
+period that the data is collected from ranges from Jan 1st, 2021 to Apr
+20th, 2023. After obtaining closing price information, we used Python to
+calculate the relevant indicators that should correlate with stock
+market price increases/ decreases. Here is a list of indicators
+calculated from our Jupyter Notebook and the potential relationships one
+might expect:
+
+\begin{itemize}
+\item
+  \textbf{Simple Moving Average (10-day period) \emph{longer term price
+  movements}}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{relationship:} we speculate that stock prices that are
+    upwards from the SMA line generally have a positive momentum,
+    signaling that the stock might continue to uptrend. the converse is
+    assumed for down-trending stocks.
+  \end{itemize}
+\item
+  \textbf{Exponential Moving Average (10-day period) \emph{shorter term
+  fluctuations captured}}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{relationship:} exponential moving averages have the same
+    concept of the SMA line, where we attempt to predict general
+    directional trends of stock prices. However, the EMA line places
+    more emphasis on more recent stock price fluctuations, which provide
+    better short-term information on stock price changes. We speculate
+    that stock prices rising above the EMA line will indicate
+    \emph{earlier} that there is an upwards trend in stock price
+  \end{itemize}
+\item
+  \textbf{Relative Strength Index (14-day period averages)}
+
+  \includegraphics{images/Capture.JPG}
+
+  (SOURCE:
+  \href{https://www.nasdaq.com/articles/what-is-the-relative-strength-index-rsi-in-stocks}{What
+  Is The Relative Strength Index (RSI) In Stocks? \textbar{} Nasdaq})
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{relationship:} the relative strength index is a very common
+    stock market indicator that describes whether a stock price is
+    oversold or overbought based on the value given. Generally, RSI
+    values of 30 or below indicate oversold stock prices, and RSI values
+    of 70 or above indicate overbought. We speculate stock prices with a
+    relatively low RSI value to be correlated with price increases.
+    Vice-versa for high RSI values.
+  \end{itemize}
+\item
+  \textbf{Moving Average Convergence / Divergence}
+
+  \includegraphics[width=5.10417in,height=\textheight]{images/macd_img.jpg}
+
+  (SOURCE:
+  \href{https://www.alpharithms.com/moving-average-convergence-divergence-macd-031217/}{Moving
+  Average Convergence Divergence (MACD) - αlphαrithms
+  (alpharithms.com)})
+
+  \begin{itemize}
+  \item
+    The MACD line is another common indicator in stock market technical
+    analysis. Generally speaking, when the signal MACD line (which is
+    the shorter 9-day period subtracted by 26-day period of the
+    exponential weighted means) crosses from below to above the MACD
+    line, we consider the stock to begin an upwards movement. When the
+    MACD signal crosses below the line, the stock is considered to go
+    downwards.
+  \item
+    \textbf{relationship:} we speculate that the distance of MACD signal
+    * slope correlates with whether the stock price increases or
+    decreases over a certain period of time.
+  \end{itemize}
+\item
+  \textbf{MACD-NEW (Engineered Variable Based off of MACD Values)}
+
+  \includegraphics{images/macdnew.png}
+
+  \begin{itemize}
+  \item
+    This is a variable that we engineered in Python, and its purpose is
+    to act as a ``signal'' that gives more information on whether the
+    macd signal line is near the actual macd. This is critical for us to
+    determine the ``when'' for a stock being a good buy or not
+  \item
+    The MACD-NEW should be correlated with the percent change in price,
+    such that a positive value of this should generally indicate an
+    upwards movement of price, and a negative value generally indicates
+    a downward motion. However, the signal we made can be a bit
+    ``messy'' since there are a lot of moving factors that go into stock
+    prices. (we will visualize this signal in the assignment to better
+    represent what's going on). \textbf{relationship:} closer distance
+    means higher signal intensity, and a negative slope means that
+    differences are closing in. Therefore, negative MACD-NEW values
+    should be correlated in theory to upwards price movements.
+  \item
+    One thing to note here is that the slope and tanh activation
+    function may be modified to get different sorts of MACD-NEW signals,
+    and that is something that we should try to tweak in the future to
+    get cleaner signal data.
+  \end{itemize}
+\item
+  \textbf{Sentiment Score (r/stocks subreddit mentions of AAPL - we
+  didn't use it but it is interesting)}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This is top Reddit comments that mention the keyword ``AAPL'', and
+    we ran VADER sentiment analysis to get a compound sentiment score
+    for a particular stock on that particular day. The sentiment scores
+    were not very useful so we decided not to include this in our data,
+    since the dates for sentiment scores were not consistently after
+    each other and we lost a lot of data for chronological stock prices
+    in this way. \textbf{relationship:} we do not expect there to be any
+    significant relationship with sentiment scores because Reddit data
+    is not very structured/ organized for stocks.
+  \end{itemize}
+\item
+  \textbf{Percent Change in 2 Week Period (Numeric Response Variable)}
+\end{itemize}
+
+\includegraphics{images/explanation.png}
+
+This is a visualization of what our percent change calculation looks
+like. Because the technical indicators that we are using are intended to
+capture more long term data, we consider a ``future'' stock price to be
+reflected by a period of 30 days after a certain number of interval
+days. The +10 day time and 30 day window seemed to be the best estimate
+for our stock price predictions because it generally captures the best
+summary of our technical indicators for the long term future. We tried
+other intervals (including price the day right after), but longer term
+capture of future stock prices seem to be the best performing for our
+model.
+
+We expect that this variable is relatively more correlated with the
+technical indicators such that higher percent changes correlate with
+lower RSI values, and lower MACD also correlate with higher percent
+changes. We also hope to see that our MACD-NEW, which is a calculation
+of our macd signal differences, will have a negative relationship to
+correlate with higher percent changes.
+
+\begin{itemize}
+\item
+  \textbf{Good Buy (Categorical Response Variable)}
+
+  \begin{itemize}
+  \item
+    This is the variable that we coded into our data set, and it
+    basically distinguished good stocks as stocks that \textbf{increase
+    by at least 3\%} in the period of time defined by percent change.
+    All other stocks are considered ``bad stocks''
+  \item
+    We made this categorical variable for our classification algorithm,
+    and this threshold evenly divides our stock prices as good or bad,
+    which means that we have roughly a 50/50 split of representation of
+    this variable in our dataset.
+  \item
+    We predict that this variable also has the same correlation
+    relationships as ``percent change'', and that is because we hope to
+    see that oversold stocks mean that there will be a higher percent
+    change, and vice-versa.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{c.-research-questions}{%
+\subsubsection{c.~Research Questions}\label{c.-research-questions}}
+
+\textbf{Wei-Yu's Research Question:} How accurately can we predict the
+stock price in two weeks with the current day\textquotesingle s stock
+price and indicators using linear regression?
+
+\textbf{Abhinav's Research Question:}
+
+Given that a good stock is a price that increases by at least 3\% in the
+period of time defined by ``percent change'', can we classify/ separate
+stocks as being a good or bad buy based on the technical indicators
+using a classifier?
+
+\hypertarget{exploratory-data-analysis}{%
+\subsection{2. Exploratory Data
+Analysis}\label{exploratory-data-analysis}}
+
+\hypertarget{a.-reading-in-the-data-stock-adjusted-closing-prices-sentiment-scores}{%
+\subsubsection{a. Reading in the Data (Stock Adjusted Closing Prices \&
+Sentiment
+Scores)}\label{a.-reading-in-the-data-stock-adjusted-closing-prices-sentiment-scores}}
+
+The data is derived from Yahoo Finance and we calculated the technical
+indicators in Python. Sentiment data is derived from Vader Sentiment
+Analysis scores off of Reddit data in ``r/stocks''. The stocks are
+classified in this project as either being a ``good buy'' or not. To be
+a ``good buy'' stock, the price must increase by at least 3\% in percent
+change period. If not, the stock is not considered to be a good buy.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# reading in the data given to us}
+\NormalTok{aapl }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}aapl\_stock.csv\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rows: 578 Columns: 15
+## -- Column specification --------------------------------------------------------
+## Delimiter: ","
+## chr   (1): Ticker
+## dbl  (13): Adj Close, Close, High, Low, Open, Volume, SMA, EMA, RSI, MACD, M...
+## date  (1): Date
+## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# creating the datetime columns for convenience in R ggplot functions}
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{separate}\NormalTok{(}\AttributeTok{col =} \StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\AttributeTok{into =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}year\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}month\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}day\textquotesingle{}}\NormalTok{), }\AttributeTok{sep=}\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{unite}\NormalTok{(date, }\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}year\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}month\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}day\textquotesingle{}}\NormalTok{), }\AttributeTok{sep =} \StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{)}
+\CommentTok{\# casting to date type}
+\NormalTok{aapl}\SpecialCharTok{$}\NormalTok{date }\OtherTok{\textless{}{-}} \FunctionTok{as.Date}\NormalTok{(aapl}\SpecialCharTok{$}\NormalTok{date)}
+
+\CommentTok{\# renaming some columns to be consistent in styling}
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  na.omit }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{rename}\NormalTok{(}\StringTok{\textquotesingle{}adj\_close\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{,}
+         \StringTok{\textquotesingle{}macd\_new\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}MACD{-}NEW\textquotesingle{}}\NormalTok{,}
+         \StringTok{\textquotesingle{}percent\_change\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}Percent\_Changes\textquotesingle{}}\NormalTok{,}
+         \StringTok{\textquotesingle{}macd\_signal\textquotesingle{}}\OtherTok{=}\StringTok{\textquotesingle{}MACD{-}SIGNAL\textquotesingle{}}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(aapl) }\OtherTok{\textless{}{-}} \FunctionTok{tolower}\NormalTok{(}\FunctionTok{names}\NormalTok{(aapl))}
+
+\CommentTok{\# removing the unessecary columns from the dataframe}
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{close, }\SpecialCharTok{{-}}\NormalTok{high, }\SpecialCharTok{{-}}\NormalTok{low, }\SpecialCharTok{{-}}\NormalTok{open)}
+
+\CommentTok{\# *** classifying stocks as either a good buy or not, given the threshold of being able to increase by at least 3 percent}
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{good\_buy =} \FunctionTok{ifelse}\NormalTok{(percent\_change }\SpecialCharTok{\textgreater{}} \DecValTok{3}\NormalTok{, T, F))}
+
+
+\CommentTok{\# the sentiment scores will be a separate dataset, since}
+\CommentTok{\# we actually do not have values for every day in the sentiment scores to do a full in{-}depth analysis of its stock prices}
+\NormalTok{aapl\_sentiment }\OtherTok{\textless{}{-}} \FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}sentiment\_aapl.csv\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## Rows: 9228 Columns: 5
+## -- Column specification
+## -------------------------------------------------------- Delimiter: "," chr
+## (1): body dbl (2): ...1, sentiment_score dttm (1): utc_datetime_str date (1):
+## date
+## i Use `spec()` to retrieve the full column specification for this data. i
+## Specify the column types or set `show_col_types = FALSE` to quiet this message.
+## * `` -> `...1`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aapl\_sentiment }\OtherTok{\textless{}{-}}\NormalTok{ aapl\_sentiment }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{body) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(date) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{sentiment\_score =} \FunctionTok{mean}\NormalTok{(sentiment\_score))}
+
+\CommentTok{\# merging sentiment scores with the aapl dataset, and we will be using this for using models that will calculate sentiment scores but for visualizing stock data, we will use the original dataset }
+\NormalTok{aapl\_sentiment }\OtherTok{\textless{}{-}} \FunctionTok{inner\_join}\NormalTok{(aapl, aapl\_sentiment, }\AttributeTok{by=}\StringTok{\textquotesingle{}date\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# here, we are mutating the difference for EMA and SMA scores because that is what really matters for this analysis}
+\NormalTok{aapl\_sentiment }\OtherTok{\textless{}{-}}\NormalTok{ aapl\_sentiment }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sma\_diff =}\NormalTok{ adj\_close }\SpecialCharTok{{-}}\NormalTok{ sma, }\AttributeTok{ema\_diff =}\NormalTok{ adj\_close }\SpecialCharTok{{-}}\NormalTok{ ema) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sma, }\SpecialCharTok{{-}}\NormalTok{ema)}
+
+\CommentTok{\# one last thing that we want to keep account of is the difference between the simple and exponential moving averages. this is because having both SMA and EMA as data inputs is quite redundant, but knowing the difference might tell us whether the stock price is beginning to diverge significantly or not}
+\NormalTok{aapl\_sentiment }\OtherTok{\textless{}{-}}\NormalTok{ aapl\_sentiment }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ema\_sma\_diff =}\NormalTok{ ema\_diff }\SpecialCharTok{{-}}\NormalTok{ sma\_diff)}
+
+\CommentTok{\# selecting out the bad variables from aapl}
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sma\_diff =}\NormalTok{ adj\_close }\SpecialCharTok{{-}}\NormalTok{ sma, }\AttributeTok{ema\_diff =}\NormalTok{ adj\_close }\SpecialCharTok{{-}}\NormalTok{ ema) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{ema)}
+
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{ema\_sma\_diff =}\NormalTok{ ema\_diff }\SpecialCharTok{{-}}\NormalTok{ sma\_diff)}
+
+\FunctionTok{head}\NormalTok{(aapl\_sentiment)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 14
+##   date       ticker adj_close    volume   rsi  macd macd_signal percent_change
+##   <date>     <chr>      <dbl>     <dbl> <dbl> <dbl>       <dbl>          <dbl>
+## 1 2021-03-22 AAPL        122. 111912300  52.2 -1.87       -2.09           5.30
+## 2 2021-03-23 AAPL        121.  95467100  54.1 -1.73       -1.91           5.89
+## 3 2021-03-24 AAPL        119.  88530500  47.9 -1.80       -2.05           7.80
+## 4 2021-03-25 AAPL        119.  98844700  58.1 -1.79       -2.07           7.10
+## 5 2021-03-26 AAPL        120.  94071200  50.3 -1.71       -1.97           6.26
+## 6 2021-03-29 AAPL        120.  80819200  53.3 -1.62       -1.84           5.89
+## # i 6 more variables: macd_new <dbl>, good_buy <lgl>, sentiment_score <dbl>,
+## #   sma_diff <dbl>, ema_diff <dbl>, ema_sma_diff <dbl>
+\end{verbatim}
+
+\hypertarget{b.-create-a-correlation-matrix}{%
+\subsubsection{b. Create a Correlation
+Matrix}\label{b.-create-a-correlation-matrix}}
+
+We will consider all variables for the correlation analysis in order to
+see whether stocks are a good buy or not. We removed the date, ticker,
+and adjusted close values because these data points are not generally
+correlated with any indicators, since their values may be arbitrary. We
+did include the two macd signals because they revealed to be correlated
+in some significant way with whether the stock was a good buy, and that
+might lead us to some interesting findings. However, it is important to
+note that the macd signal and macd line will naturally be correlated to
+each other since they do generally follow each other, but we should
+ignore this fact in this graph.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#demonstrating correlation of variables with only Apple stocks}
+\NormalTok{aapl\_sentiment }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{date,}\SpecialCharTok{{-}}\NormalTok{ticker, }\SpecialCharTok{{-}}\NormalTok{adj\_close, }\SpecialCharTok{{-}}\NormalTok{ema\_diff, }\SpecialCharTok{{-}}\NormalTok{sma\_diff) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  cor }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  ggcorrplot}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# }\AlertTok{NOTE}\CommentTok{: for our actual model analysis, we did not include sentiment score because adding this variable deletes some crucial dates from the stock market prediction and means that our cross validation cannot be run chronologically, which means that seasonal stock market data reflections are not possible to be made }
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{correlation-matrix}{%
+\subsubsection{\texorpdfstring{\textbf{Correlation
+Matrix}}{Correlation Matrix}}\label{correlation-matrix}}
+
+The highest correlated variables are macd and macd-signal, but that is
+expected because of the fact that these lines are similary calculated.
+Looking past that, we want to pay attention to ``good\_buy'', because
+that is the variable that tells us whether the stock price increases by
+over 3\% in the future period. When taking a look at this, we notice
+that a stock being a good buy is relatively more corrrelated with
+``macd'', ``macd\_signal'', and ``percent\_change'' (this is obviously
+the most correlated since that indicates the percent change''. There is
+a slight positive correlation with ``macd\_new'', which is our own
+calculated indicatior that tells us the ``strength'' of a macd line
+crossing or not. Another variable to consider is the sentiment score.
+This score will calculate the sentiment of users on Reddit about a
+particular stock on a certain day. We notice that this variable is not
+very correlated with any others, so that is not a good sign for our
+prediction model.
+
+Overall, the highest correlations are present with MACD indicators and
+whether a stock is a good buy, and the lowest correlation is generally
+between any pair of indicators that are used with the sentiment scores.
+
+\hypertarget{visualizations-of-relationships-across-the-variables}{%
+\section{\texorpdfstring{\textbf{Visualizations of Relationships across
+the
+Variables}}{Visualizations of Relationships across the Variables}}\label{visualizations-of-relationships-across-the-variables}}
+
+\hypertarget{a.-wei-yus-visualizations}{%
+\subsubsection{\texorpdfstring{\textbf{a. Wei-Yu's
+Visualizations}}{a. Wei-Yu's Visualizations}}\label{a.-wei-yus-visualizations}}
+
+\hypertarget{i.-stock-price-relative-strength-index-and-average-price-of-stock-two-weeks-from-the-current-day}{%
+\paragraph{i. Stock Price, Relative Strength Index, and Average Price of
+Stock Two Weeks from the Current
+Day}\label{i.-stock-price-relative-strength-index-and-average-price-of-stock-two-weeks-from-the-current-day}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we are plotting the RSI values for the first 100 days of stock market data}
+\NormalTok{aapl\_price }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ date,}\AttributeTok{y=}\NormalTok{adj\_close)) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{\textquotesingle{}Adjusted Close\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{aapl\_rsi }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{rsi)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{70}\NormalTok{, }\AttributeTok{linetype=}\StringTok{\textquotesingle{}dashed\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}orange\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{30}\NormalTok{, }\AttributeTok{linetype=}\StringTok{\textquotesingle{}dashed\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}orange\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{\textquotesingle{}RSI\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{percent\_change }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{100}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ date, }\AttributeTok{y =}\NormalTok{ percent\_change)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{y =} \StringTok{\textquotesingle{}Percent Change\textquotesingle{}}\NormalTok{)}
+
+\FunctionTok{grid.arrange}\NormalTok{(aapl\_price,aapl\_rsi,percent\_change, }\AttributeTok{ncol=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\textbf{Relative Strength Index}
+
+The RSI is separated from the graph because it is calculated from the
+percentage gain/loss of stock prices. Typically, when the RSI is above
+70 then the stock is overbought and when the score is below 30 it is
+oversold. People usually want to sell stocks when it is overbought and
+buy when the stocks are oversold. Here we can see instances of when the
+RSI score is very high and is followed with a downward trend because it
+is overbought. One interesting pattern to notice is that whenever the
+RSI value is greater than the threshold of 70, we notice that 2 weeks
+from that current day, the stock price generally is negative in value.
+Whenever the RSI is below 30, the stock price 2 weeks from that day is
+actually in the positive. This is a good sign that our indicators are
+working and that RSI may allow us to determine when stock prices are
+going to increase or decrease in the future.
+
+\includegraphics{images/Capture.JPG}
+
+\hypertarget{ii.-simple-moving-average}{%
+\paragraph{ii. Simple Moving Average}\label{ii.-simple-moving-average}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aapl }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{0}\SpecialCharTok{:}\DecValTok{300}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{adj\_close)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{sma),}\AttributeTok{color=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we visualized SMA here, but we dont need it anymore since "sma\_diff" is basically more valuable than SMA for our future predictions }
+\NormalTok{aapl }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{sma)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Simple Moving Average}
+
+The simple moving average is calculated based on the prices of previous
+days. It computes an average and overlaps onto the line graph of price
+because it is specific to that price. This tool is used to look at
+upward and downward trends as it allows people to see how the price is
+performing based on an average. For example, around 2021-07, price
+(black line) stays above the SMA (red line) for many days because it
+keeps performing better than its average. We can watch out for when the
+price crosses the SMA which could indicate price changing directions.
+
+\hypertarget{b.-abhinavs-visualizations}{%
+\subsubsection{\texorpdfstring{\textbf{b. Abhinav's
+Visualizations}}{b. Abhinav's Visualizations}}\label{b.-abhinavs-visualizations}}
+
+\hypertarget{iii.-good-buy-stocks-with-macd-new}{%
+\paragraph{iii. Good Buy Stocks with
+MACD-NEW}\label{iii.-good-buy-stocks-with-macd-new}}
+
+Because we did create our own technical indicator from MACD signals, we
+want to see if this indicator has any meaning or if there is simply just
+too much noise for the indicator. In order to do this, compared the
+distribution of the MACD-NEW values with whether a stock is a good buy
+or not. To also understand this in terms of other technical indicators,
+we also added a couple more variables in the graph to see what variables
+truly are better indicators for telling us if a stock is a good buy or
+not.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# making 3 similar box plots for side{-}by{-}side visualization }
+\NormalTok{md\_new\_plot }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ macd\_new)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{good\_buy) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{\textquotesingle{}Good buy (\textgreater{}= 3\% increase) vs. Indicators\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{\textquotesingle{}MACD{-}NEW\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{rsi\_plot }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ rsi)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{good\_buy) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{\textquotesingle{}RSI\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{md\_plot }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ macd)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{good\_buy) }\SpecialCharTok{+} 
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{\textquotesingle{}MACD\textquotesingle{}}\NormalTok{)}
+
+\FunctionTok{grid.arrange}\NormalTok{(md\_new\_plot, md\_plot, rsi\_plot, }\AttributeTok{ncol=}\DecValTok{1}\NormalTok{, }\AttributeTok{nrow=}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Except for the MACD singal having a lower median value below 0 for good
+buy stocks, the technical indicators seem to have no real signficant
+difference in population distributions for whether a stock is a good buy
+or not. However, when we do take a look at stock market data, we notice
+that these indicators are indeed related to price movements of stocks
+and future movements as well. One reason to explain why this happens is
+because stock market prices are very prone to fluctuation, and there are
+plenty of different sorts of market conditions (bull vs bear runs) for
+stock prices. These fluctuations ultimately mean that stock market
+indicators cannot be the final verdict for generalizing stock price
+movements for \emph{any} time of year. And this is actually very true if
+we take a look at one more visualization:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{price }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(aapl }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice}\NormalTok{(}\DecValTok{100}\SpecialCharTok{:}\DecValTok{200}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ date, }\AttributeTok{y =}\NormalTok{ adj\_close)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{\textquotesingle{}Stock Price (Above) and MACD{-}NEW (Below)\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{md\_new }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(aapl }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{slice}\NormalTok{(}\DecValTok{100}\SpecialCharTok{:}\DecValTok{200}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ date, }\AttributeTok{y =}\NormalTok{ macd\_new)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# taking a look at shorter term price data... we can see that there is a lot of signal noise in the data, but higher values of signals generally occur when stock price goes down, and vice{-}versa for lower values}
+\FunctionTok{grid.arrange}\NormalTok{(price, md\_new, }\AttributeTok{ncol=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\hypertarget{iv.-rsi-and-macd-relationship-with-price-changes}{%
+\paragraph{iv. RSI and MACD Relationship with Price
+Changes}\label{iv.-rsi-and-macd-relationship-with-price-changes}}
+
+Taking the two most correlated variables in the correlation plot, we can
+inspect the relationship between RSI, MACD, and whether the stock was a
+good buy along with the corresponding percent change of that stock
+price.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# checking to }
+\NormalTok{aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{good\_buy =} \FunctionTok{factor}\NormalTok{(good\_buy, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(T, F), }\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}GOOD BUY\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}BAD BUY\textquotesingle{}}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ rsi, }\AttributeTok{y =}\NormalTok{ macd, }\AttributeTok{color =}\NormalTok{ percent\_change)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{shape =}\NormalTok{ good\_buy)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{\textquotesingle{}RSI and MACD Lines for Good and Bad Stock Purchases\textquotesingle{}}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{\textquotesingle{}Relative Strength Index\textquotesingle{}}\NormalTok{,}
+       \AttributeTok{y =} \StringTok{\textquotesingle{}Moving Average Convergence/ Divergence\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{shape =} \StringTok{\textquotesingle{}Type\textquotesingle{}}\NormalTok{,}
+       \AttributeTok{color =} \StringTok{\textquotesingle{}Percent Change\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{annotate}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\AttributeTok{x =} \DecValTok{75}\NormalTok{, }\AttributeTok{y =} \SpecialCharTok{{-}}\DecValTok{4}\NormalTok{, }\AttributeTok{label =} \StringTok{"Good Buy Region"}\NormalTok{, }\AttributeTok{color =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{size =} \DecValTok{5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{annotate}\NormalTok{(}\StringTok{\textquotesingle{}text\textquotesingle{}}\NormalTok{, }\AttributeTok{x =} \FloatTok{16.5}\NormalTok{, }\AttributeTok{y =} \DecValTok{4}\NormalTok{, }\AttributeTok{label =} \StringTok{\textquotesingle{}Bad Buy Region\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\AttributeTok{size =} \DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: The following aesthetics were dropped during statistical transformation: colour
+## i This can happen when ggplot fails to infer the correct grouping structure in
+##   the data.
+## i Did you forget to specify a `group` aesthetic or to convert a numerical
+##   variable into a factor?
+\end{verbatim}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-8-1.pdf}
+
+From the visualization above, we realize that there is actually a very
+interesting trend of RSI values and MACD! As RSI increases, we notice
+that MACD also increases, and that makes sense because both indicators
+are calculated using exponential weighted means that are related to each
+other. However, one trend that is interesting is that above this linear
+regression line of RSI and MACD, we mostly have ``BAD'' stocks, and
+below this line, we mostly have ``GOOD'' stocks. This means that above
+the regression line we notice stocks that generally go down and below
+are stocks that go up.
+
+This is a complicated relationship, so here is a bullet point list of
+each interaction that is going on here:
+
+\begin{itemize}
+\item
+  lower MACD under a relative RSI value generally have better stocks to
+  buy, why?
+
+  \begin{itemize}
+  \item
+    because lower MACD lines typically indicate that a stock is also
+    being oversold, and if a stock is oversold, it will generally rise
+    in price
+  \item
+    The same argument goes for higher MACD lines
+  \end{itemize}
+\item
+  MACD is correlated with RSI in a general upwards trend, why?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    same point as above, but lower lines typically represent oversold
+    stocks, and that also corresponds to lower RSI values, which are
+    ALSO oversold stocks!
+  \end{itemize}
+\item
+  GOOD buy stocks are below the regression line, and BAD buy stocks are
+  above, why?
+
+  \begin{itemize}
+  \item
+    For any given RSI value, we know that being lower (around 30)
+    generally means that stock prices have a tendency to increase. Now,
+    with MACD values which are ALSO lower, we have a consensus on two
+    types of indicators. Because both indicators agree on this stock
+    being oversold, we have a higher probability that the stock price is
+    indeed oversold, meaning that the price is MORE LIKELY to tend
+    upwards!
+  \item
+    So for any given RSI value that is low, an even lower MACD value
+    (below regression line) more strongly indicates that the stock is
+    being oversold. The stock is more likely to tend upwards due to
+    this, hence we see more stocks as a good buy underneath this line.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{prediction-and-cross-validation}{%
+\subsection{3. Prediction and
+Cross-validation}\label{prediction-and-cross-validation}}
+
+\hypertarget{a.-wei-yus-prediction}{%
+\subsubsection{\texorpdfstring{\textbf{a. Wei-Yu's
+Prediction}}{a. Wei-Yu's Prediction}}\label{a.-wei-yus-prediction}}
+
+\hypertarget{i.-predicting-stock-prices-2-weeks-from-the-current-day-using-a-linear-model}{%
+\paragraph{i. Predicting Stock Prices 2 Weeks From the Current Day Using
+a Linear
+Model}\label{i.-predicting-stock-prices-2-weeks-from-the-current-day-using-a-linear-model}}
+
+For predicting stock prices, we are predicting prices 2 weeks from
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# predicting the percent change of stock prices given the following indicators}
+\NormalTok{fit\_lin }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(percent\_change}\SpecialCharTok{\textasciitilde{}}\NormalTok{ema\_diff }\SpecialCharTok{+}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_signal }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl)}
+
+\CommentTok{\# summary of the model: volume, macd, and macd\_signal are the most significant variables for prediction for this linear model, that is something interesting}
+\FunctionTok{summary}\NormalTok{(fit\_lin)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = percent_change ~ ema_diff + rsi + volume + macd + 
+##     macd_signal + macd_new + sma_diff + ema_diff, data = aapl)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -17.7404  -5.7977   0.4078   6.3445  16.3744 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  2.384e+00  3.033e+00   0.786 0.432273    
+## ema_diff     1.433e-01  7.938e-01   0.181 0.856800    
+## rsi          4.980e-02  5.291e-02   0.941 0.346974    
+## volume      -3.317e-08  1.402e-08  -2.366 0.018380 *  
+## macd        -8.607e+00  2.570e+00  -3.348 0.000875 ***
+## macd_signal  5.887e+00  2.124e+00   2.771 0.005797 ** 
+## macd_new     1.410e-01  4.497e-01   0.313 0.754049    
+## sma_diff    -5.450e-01  6.759e-01  -0.806 0.420394    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 7.922 on 492 degrees of freedom
+## Multiple R-squared:  0.1967, Adjusted R-squared:  0.1853 
+## F-statistic: 17.21 on 7 and 492 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# get predicted price change \% 2 weeks from the current date}
+\NormalTok{pred\_lin }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{predictions =} \FunctionTok{predict}\NormalTok{(fit\_lin)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(percent\_change,predictions,date)}
+
+\CommentTok{\# plot actual price change vs. predicted price change in 2 weeks }
+\NormalTok{pred\_lin }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{percent\_change)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{predictions),}\AttributeTok{color=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{\textquotesingle{}Actual Percent Change Over The Next Month vs. }\SpecialCharTok{\textbackslash{}n}\StringTok{Predicted Percent Change (Black = Actual, Red = Predicted)\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# the predicted error for new data being seen, the Root mean squared error}
+\FunctionTok{rmse}\NormalTok{(pred\_lin}\SpecialCharTok{$}\NormalTok{percent\_change,pred\_lin}\SpecialCharTok{$}\NormalTok{predictions)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7.858677
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# the R\^{}2 statistic is pretty low, meaning that only 19\% of the variance of stock prices are explained by the model\textquotesingle{}s performance}
+\FunctionTok{summary}\NormalTok{(fit\_lin)}\SpecialCharTok{$}\NormalTok{r.squared}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1966841
+\end{verbatim}
+
+\textbf{(First 60 days of graph above)}
+
+for a more detailed view of a certain period of days:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# slicing the graph for a smaller window}
+\NormalTok{pred\_lin }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{80}\SpecialCharTok{:}\DecValTok{160}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =} \StringTok{\textquotesingle{}Type\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{percent\_change, }\AttributeTok{color =} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{date,}\AttributeTok{y=}\NormalTok{predictions),}\AttributeTok{color=}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_hline}\NormalTok{(}\AttributeTok{yintercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype=}\StringTok{\textquotesingle{}dashed\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}orange\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{name =} \StringTok{\textquotesingle{}Type\textquotesingle{}}\NormalTok{, }
+                     \AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Actual Price\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}black\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Predicted\textquotesingle{}} \OtherTok{=} \StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{),}
+                     \AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}Actual Price\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Predicted\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{\textquotesingle{}Actual Percent Change Over The Next Month vs. }\SpecialCharTok{\textbackslash{}n}\StringTok{Predicted Percent Change (Black = Actual, Red = Predicted)\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\hypertarget{ii.-cross-validation-of-linear-regression-model}{%
+\paragraph{ii. Cross Validation of Linear Regression
+Model}\label{ii.-cross-validation-of-linear-regression-model}}
+
+\textbf{We were told to use cross validation for our predictions, but we
+also compared this with the time slice validation method because:}
+
+\begin{itemize}
+\item
+  stock market conditions change over time: sometimes, we might have an
+  upwards trend in the market, and other times the trend may be
+  downwards/ stagnant
+\item
+  seasonal changes to stock market conditions l
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we are using train control here to make slices based on chronological order}
+\NormalTok{TimeControl }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{\textquotesingle{}timeslice\textquotesingle{}}\NormalTok{,}
+                            \AttributeTok{initialWindow =} \DecValTok{45}\NormalTok{,}
+                            \AttributeTok{horizon =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{foldControl }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{\textquotesingle{}cv\textquotesingle{}}\NormalTok{, }\AttributeTok{number =} \DecValTok{7}\NormalTok{) }\CommentTok{\# 7 fold cv}
+
+
+\CommentTok{\# training cross validation model}
+\NormalTok{lin\_cv }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(percent\_change}\SpecialCharTok{\textasciitilde{}}\NormalTok{ema\_diff }\SpecialCharTok{+}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_signal }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl, }\AttributeTok{method =} \StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{, }\AttributeTok{trControl =}\NormalTok{ TimeControl)}
+
+\NormalTok{lin\_cv\_fold }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(percent\_change}\SpecialCharTok{\textasciitilde{}}\NormalTok{ema\_diff }\SpecialCharTok{+}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_signal }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl, }\AttributeTok{method =} \StringTok{\textquotesingle{}lm\textquotesingle{}}\NormalTok{, }\AttributeTok{trControl =}\NormalTok{ foldControl)}
+
+\NormalTok{lin\_cv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear Regression 
+## 
+## 500 samples
+##   7 predictor
+## 
+## No pre-processing
+## Resampling: Rolling Forecasting Origin Resampling (10 held-out with a fixed window) 
+## Summary of sample sizes: 45, 45, 45, 45, 45, 45, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   7.675412  0.5218648  7.185886
+## 
+## Tuning parameter 'intercept' was held constant at a value of TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lin\_cv\_fold}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear Regression 
+## 
+## 500 samples
+##   7 predictor
+## 
+## No pre-processing
+## Resampling: Cross-Validated (7 fold) 
+## Summary of sample sizes: 430, 430, 428, 428, 428, 428, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   7.936069  0.1895576  6.714518
+## 
+## Tuning parameter 'intercept' was held constant at a value of TRUE
+\end{verbatim}
+
+\textbf{Time-Series Cross-Validation}
+
+Our cross-validation method had to account for our data being a
+time-series. We cannot partition our data and scramble them up as there
+needs to be a certain order since we are accounting for time. This
+method provides that solution by doing a rolling window of training and
+testing data. The initial window parameter is set to 45 here which means
+the first 45 data points are used for training then the 10 data points
+after that is used for testing.
+
+\textbf{Linear Regression CV Results}
+
+The results above do not provide accuracy because we are attempting to
+predict a numeric variable and not a categorical one. Instead, we can
+look at the RMSE of 8.005, which is very high pertaining to this
+scenario. \emph{Note that results may vary depending on the seed set
+before running this cross validation. T}his means, on average, our
+weighted error between actual and predicted is off by about 7. The
+R-Squared value is not a very favorable measure in determining the
+strength of our model because we are dealing with factors such as trends
+and non-stationary values that grow over time.
+
+\textbf{Over fitting}
+
+These results do not seem to over fit because the stock market is
+something very hard to predict as prices are affect by numerous reasons
+that do not just pertain to mathematical indicators. In fact we could be
+under fitting as our model does not do a good job of predicting and this
+could be due to the model we used to fit out data. A potential better
+alternative could be polynomial regression as it allows for more
+flexibility of price movements which is advantageous if you look at how
+stock prices move so sporadically.
+
+\hypertarget{b.-abhinav-bichals-predictions}{%
+\subsubsection{b. Abhinav Bichal's
+Predictions}\label{b.-abhinav-bichals-predictions}}
+
+\hypertarget{iii.-predicting-whether-a-stock-is-a-good-buy-or-not-using-indicator-data}{%
+\paragraph{iii. Predicting Whether a Stock is a Good Buy or Not Using
+Indicator
+Data}\label{iii.-predicting-whether-a-stock-is-a-good-buy-or-not-using-indicator-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# creating the decision tree here}
+\NormalTok{stock\_tree }\OtherTok{\textless{}{-}} \FunctionTok{rpart}\NormalTok{(good\_buy }\SpecialCharTok{\textasciitilde{}}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl)}
+
+\CommentTok{\# taking a look at the decision tree for a good or bad stock price prediction result}
+\FunctionTok{rpart.plot}\NormalTok{(stock\_tree)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prediction\_results }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{predictions =} \FunctionTok{predict}\NormalTok{(stock\_tree, aapl), }\AttributeTok{actual =} \FunctionTok{ifelse}\NormalTok{(aapl}\SpecialCharTok{$}\NormalTok{good\_buy }\SpecialCharTok{==}\NormalTok{ T, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+
+\CommentTok{\# the ROC curve does provide some predictive power/ value for a prediction of a good stock buy/ sell. }
+\NormalTok{ROC }\OtherTok{\textless{}{-}}\NormalTok{ prediction\_results }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_roc}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{d =}\NormalTok{ actual, }\AttributeTok{m =}\NormalTok{ predictions), }\AttributeTok{n.cuts =} \DecValTok{10}\NormalTok{)}
+
+\NormalTok{ROC }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: The following aesthetics were dropped during statistical transformation: d, m
+## i This can happen when ggplot fails to infer the correct grouping structure in
+##   the data.
+## i Did you forget to specify a `group` aesthetic or to convert a numerical
+##   variable into a factor?
+\end{verbatim}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculating the area under the curve}
+\FunctionTok{paste}\NormalTok{(}\StringTok{\textquotesingle{}area under the curve: \textquotesingle{}}\NormalTok{, }\FunctionTok{calc\_auc}\NormalTok{(ROC)}\SpecialCharTok{$}\NormalTok{AUC)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: The following aesthetics were dropped during statistical transformation: d, m
+## i This can happen when ggplot fails to infer the correct grouping structure in
+##   the data.
+## i Did you forget to specify a `group` aesthetic or to convert a numerical
+##   variable into a factor?
+\end{verbatim}
+
+\begin{verbatim}
+## [1] "area under the curve:  0.897322368101536"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we got an excellent ROC score! An ROC ascore betweeen 0.8 {-} 0.9 is a great number to get for prediction of stock prices (whether we have a good or bad stock purchase)}
+\end{Highlighting}
+\end{Shaded}
+
+Reflection of AUC score: We got an excellent AUC score, but we should
+also keep in mind that this AUC score is calculated on the training
+data, which we already seen before. The model is good at training on
+itself, but may be prone to overfitting on its own data. In order to
+determine the general performance of our model on other datasets, it is
+worth performing cross-validation (which is the next part).
+
+\hypertarget{iv.-performing-cross-validation-with-decision-trees}{%
+\paragraph{iv. Performing Cross Validation with Decision
+Trees}\label{iv.-performing-cross-validation-with-decision-trees}}
+
+comparing
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we are using train control here to make slices based on chronological order}
+\NormalTok{TimeControl }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{\textquotesingle{}timeslice\textquotesingle{}}\NormalTok{,}
+                            \AttributeTok{initialWindow =} \DecValTok{200}\NormalTok{,}
+                            \AttributeTok{horizon =} \DecValTok{20}\NormalTok{)}
+
+\NormalTok{foldControl }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{\textquotesingle{}cv\textquotesingle{}}\NormalTok{, }\AttributeTok{number =} \DecValTok{7}\NormalTok{) }\CommentTok{\# 7 fold cv}
+
+
+\CommentTok{\# training cross validation model}
+\NormalTok{rpart\_cv }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(good\_buy}\SpecialCharTok{\textasciitilde{}}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_signal }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{good\_buy =} \FunctionTok{as.factor}\NormalTok{(good\_buy)), }\AttributeTok{method =} \StringTok{\textquotesingle{}rpart\textquotesingle{}}\NormalTok{, }\AttributeTok{trControl =}\NormalTok{ TimeControl)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
+## : There were missing values in resampled performance measures.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rpart\_cv\_folds }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(good\_buy}\SpecialCharTok{\textasciitilde{}}\NormalTok{ rsi }\SpecialCharTok{+}\NormalTok{ volume }\SpecialCharTok{+}\NormalTok{ macd }\SpecialCharTok{+}\NormalTok{ macd\_signal }\SpecialCharTok{+}\NormalTok{ macd\_new }\SpecialCharTok{+}\NormalTok{ sma\_diff }\SpecialCharTok{+}\NormalTok{ ema\_diff, }\AttributeTok{data =}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{good\_buy =} \FunctionTok{as.factor}\NormalTok{(good\_buy)), }\AttributeTok{method =} \StringTok{\textquotesingle{}rpart\textquotesingle{}}\NormalTok{, }\AttributeTok{trControl =}\NormalTok{ foldControl)}
+
+\CommentTok{\# taking a look at the cross{-}validation results}
+\NormalTok{rpart\_cv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## CART 
+## 
+## 500 samples
+##   7 predictor
+##   2 classes: 'FALSE', 'TRUE' 
+## 
+## No pre-processing
+## Resampling: Rolling Forecasting Origin Resampling (20 held-out with a fixed window) 
+## Summary of sample sizes: 200, 200, 200, 200, 200, 200, ... 
+## Resampling results across tuning parameters:
+## 
+##   cp          Accuracy   Kappa    
+##   0.04260090  0.6211744  0.1704278
+##   0.05829596  0.6062278  0.1711398
+##   0.19730942  0.5539146  0.0248141
+## 
+## Accuracy was used to select the optimal model using the largest value.
+## The final value used for the model was cp = 0.0426009.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rpart\_cv\_folds}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## CART 
+## 
+## 500 samples
+##   7 predictor
+##   2 classes: 'FALSE', 'TRUE' 
+## 
+## No pre-processing
+## Resampling: Cross-Validated (7 fold) 
+## Summary of sample sizes: 429, 429, 428, 428, 429, 429, ... 
+## Resampling results across tuning parameters:
+## 
+##   cp          Accuracy   Kappa     
+##   0.04260090  0.6243293  0.23944206
+##   0.05829596  0.6182651  0.23308992
+##   0.19730942  0.5661189  0.07834982
+## 
+## Accuracy was used to select the optimal model using the largest value.
+## The final value used for the model was cp = 0.0426009.
+\end{verbatim}
+
+\textbf{Summary:} The results of the classification model decision tree
+using a 7 fold cross validation score is shown above. The model is built
+using 500 stock market data points and 7 predictor variables. The cross
+validation model's best accuracy was close to the time series model
+accuracy, with around 64\% accuracy, compared to only 62\% for the other
+model type. The average performance for both sorts of cross validation
+models is around 60\% which is a good sign. We also did a time series
+comparison of 40 for window size and 10 for horizon, but the model
+accuracy was very low, near a 50\% level, and that is not included in
+these results.
+
+Unlike the regression model, this 7 fold cross validation score ended up
+resulting in similar performance to the best time series cross
+validation that we found, and that is an interesting observation that
+reveals to us that the classification model works better with more data
+input to it. Also, the model works better with more complex data, as we
+realize that the highest performing one has a cp value of the lowest
+level o 0.0426, which indicates that the decision tree is more complex
+than the other sorts of cross validation that it was trained on.
+
+Now, to answer the questions on the document:
+
+\begin{itemize}
+\item
+  are there any signs of overfitting?
+
+  \begin{itemize}
+  \item
+    There is a sign of overfitting. The model performs surprisingly well
+    when trained on all data points and calculating the ROC of itself.
+    The classification is not the best, but the model is noticing some
+    patterns that are worth looking into later on.
+  \item
+    we might want to consider including more ticker symbols in the
+    future for better predictions and higher variance in the future to
+    try to fit stock market data better, but bringing in more data might
+    also add on to the noise in our stock market data.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{c.-comparing-decision-trees-to-linear-regression---which-model-is-more-reliable}{%
+\subsubsection{c.~Comparing Decision Trees to Linear Regression - Which
+Model is More
+Reliable?}\label{c.-comparing-decision-trees-to-linear-regression---which-model-is-more-reliable}}
+
+Comparing the two models, we would go with linear regression as the
+better one because of it's lower RMSE score. The lower the score means
+the closer our predictions come to the actual data. However, the linear
+regression model does struggle to perform well when trained on the cross
+validation data for random sampling, and that indicates that the
+regression model is better performing on data that is chronological/
+around the same time period. This may be reflected by changing market
+conditions that alter the behavior of stock prices relative to their
+indicator values, and linear regression may only be effective when
+looking at windows of time at once.
+
+\hypertarget{dimensionality-reduction}{%
+\subsection{4. Dimensionality
+Reduction}\label{dimensionality-reduction}}
+
+\textbf{Additional Data Preparation}
+
+In order to perform PCA, we must do the following steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  prepare the data by centering and scaling the data
+\item
+  performing PCA using prcomp() on the prepared variables
+\item
+  selecting the number of principal components to make an explained
+  variance plot
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    we generally want to select PCs that correspond to 70-100\% of the
+    model variance if we want to generalize our observations
+  \end{enumerate}
+\item
+  find the PC scores and visualize the first two PCs
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# change volume data type as a double}
+\NormalTok{aapl}\SpecialCharTok{$}\NormalTok{volume }\OtherTok{\textless{}{-}} \FunctionTok{as.double}\NormalTok{(aapl}\SpecialCharTok{$}\NormalTok{volume)}
+
+\CommentTok{\# now, only select the numeric variables and remove the unecessary data. }\AlertTok{NOTE}\CommentTok{: percent change is also being taken out because this is not something that is known in real time, and therefore that is a prediction variable that we should NOT consider.}
+\NormalTok{aapl\_scaled }\OtherTok{\textless{}{-}}\NormalTok{ aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select\_if}\NormalTok{(is.double) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{!}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{percent\_change) }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  scale }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  as.data.frame}
+
+\CommentTok{\# taking a look at how the dataset looks like so far...}
+\FunctionTok{head}\NormalTok{(aapl\_scaled)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      volume       rsi       macd macd_signal    macd_new   sma_diff   ema_diff
+## 1 0.6290298 -1.557012 -0.4366516  -0.5523735 -0.20037456 -1.5250294 -1.4862945
+## 2 2.7088455 -1.481313 -0.5662790  -0.6899114 -0.26410417 -1.3159799 -1.2533259
+## 3 0.9015922 -2.615311 -0.6749009  -0.7983099 -0.21994429 -1.1955324 -1.1401743
+## 4 2.3234089 -2.678962 -0.8659137  -1.0089807 -0.08097866 -1.8280928 -1.8528787
+## 5 2.9494168 -2.641773 -0.9989434  -1.1412947 -0.27687989 -1.4691368 -1.4675817
+## 6 1.1031587 -1.122010 -0.9212059  -1.0087476 -0.66112159  0.1096665  0.1569606
+##   ema_sma_diff
+## 1    1.1536944
+## 2    1.1031000
+## 3    0.9963913
+## 4    1.1209016
+## 5    0.9798249
+## 6    0.1013137
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# simply perform PCA on this numerical dataset now}
+\NormalTok{pca }\OtherTok{\textless{}{-}}\NormalTok{ aapl\_scaled }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{  prcomp}
+
+\CommentTok{\# we realize that much of the model variance is retained at around 70\%}
+\FunctionTok{fviz\_eig}\NormalTok{(pca, }\AttributeTok{addlabels =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{60}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\textbf{We will keep the first two principal components for total of
+71.6\% explained variance. These are the explained variances for our
+first two principal components.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# PCA of AAPL Stock Indices}
+\FunctionTok{fviz\_pca\_ind}\NormalTok{(pca) }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-18-1.pdf}
+
+\hypertarget{clustering}{%
+\subsection{5. Clustering}\label{clustering}}
+
+\hypertarget{a.-pam-clustering-and-reason-why-we-chose-this-method}{%
+\subsubsection{a. PAM Clustering and Reason Why We Chose This
+Method}\label{a.-pam-clustering-and-reason-why-we-chose-this-method}}
+
+\textbf{PAM Clustering}
+
+We decided to use the PAM clustering algorithm because PAM clustering is
+less sensitive to outlier data because the medioid points are actually
+just the points themselves. If we were to use K-means, outliers could
+skew the clustering towards either extreme ends of our data, which is
+not what we would like.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{fviz\_nbclust}\NormalTok{(aapl\_scaled, pam, }\AttributeTok{method =} \StringTok{"silhouette"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\textbf{We will choose to use two clusters.}
+
+Two clusters seem to be ideal due to the high dropoff of silhouette
+width after 2 clusters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pam\_results }\OtherTok{\textless{}{-}}\NormalTok{ aapl\_scaled }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pam}\NormalTok{(}\AttributeTok{k =} \DecValTok{2}\NormalTok{)}
+
+\FunctionTok{fviz\_cluster}\NormalTok{(pam\_results, }\AttributeTok{title =} \StringTok{\textquotesingle{}PCA of AAPL Adj Close Stock Prices Based on Indicator Data }\SpecialCharTok{\textbackslash{}n}\StringTok{(71.6\% Explained Variance)\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: argument title is deprecated; please use main instead.
+\end{verbatim}
+
+\includegraphics{predictions__files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\hypertarget{b.-summary-statistics-of-pam-clustering-and-observations-of-clusters}{%
+\subsubsection{b. Summary Statistics of PAM Clustering and Observations
+of
+Clusters}\label{b.-summary-statistics-of-pam-clustering-and-observations-of-clusters}}
+
+\hypertarget{summary-statistics-of-our-two-different-clusters}{%
+\paragraph{Summary statistics of our two different
+clusters}\label{summary-statistics-of-our-two-different-clusters}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# we can get the summary of these clusters by grouping by these specific clusters given to us and talking about their relevance }
+\NormalTok{aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cluster =} \FunctionTok{as.factor}\NormalTok{(pam\_results}\SpecialCharTok{$}\NormalTok{clustering)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(cluster) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize\_if}\NormalTok{(is.numeric, mean, }\AttributeTok{na.rm =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 11
+##   cluster adj_close    volume   rsi  macd macd_signal percent_change macd_new
+##   <fct>       <dbl>     <dbl> <dbl> <dbl>       <dbl>          <dbl>    <dbl>
+## 1 1            143. 92320794.  39.5 -1.68       -2.28          2.97    -0.234
+## 2 2            153. 81260808.  68.9  2.47        3.34          0.474    0.302
+## # i 3 more variables: sma_diff <dbl>, ema_diff <dbl>, ema_sma_diff <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aapl }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{cluster =} \FunctionTok{as.factor}\NormalTok{(pam\_results}\SpecialCharTok{$}\NormalTok{clustering)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(cluster) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize\_if}\NormalTok{(is.numeric, mean, }\AttributeTok{na.rm =}\NormalTok{ T) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(cluster, rsi, macd, percent\_change)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 4
+##   cluster   rsi  macd percent_change
+##   <fct>   <dbl> <dbl>          <dbl>
+## 1 1        39.5 -1.68          2.97 
+## 2 2        68.9  2.47          0.474
+\end{verbatim}
+
+The PAM clustering actually gave us some very interesting data:
+
+\begin{itemize}
+\item
+  Cluster 1 is grouped with OVERSOLD stocks
+
+  \begin{itemize}
+  \item
+    RSI value average is around 30, which is a standard value threshold
+    for oversold stocks
+  \item
+    MACD value is negative, which is also indicative of oversold stocks
+  \item
+    percent change is near 3\%, which is close to our threshold of
+    ``good buy'' stocks!
+  \end{itemize}
+\item
+  Cluster 2 is grouped with generally OVERBOUGHT stocks
+
+  \begin{itemize}
+  \item
+    RSI value is near 70, which is the standard value of overbought
+    stocks
+  \item
+    MACD is positive, which is also in conesnsus with a high RSI value
+  \item
+    The percent change of stock price is near 0.5 - 0\%, which indicates
+    either rapid fluctuations or generally decreasing stock prices.
+  \item
+    For this sort of cluster, we cannot be sure that stock prices are a
+    good buy or not, so they are not classified to be as such either!
+  \end{itemize}
+\end{itemize}
+
+\textbf{The most exciting result is that the RSI values are close to the
+actual standard RSI value threshold for stocks at 30 and 70 for oversold
+and overbought stocks, respectively. This is a good sign that our model
+is on the right track and that the technical indicators are doing the
+right job. Also this is a good indicator that our response variable is
+also accurately captured in the long term trends of price if it's
+associated with RSI and MACD values that make sense.}
+
+\hypertarget{discussion}{%
+\subsection{6. Discussion}\label{discussion}}
+
+\textbf{Wei-Yu's Research Findings}
+
+Q: How accurately can we predict the stock price in two weeks with the
+current day's stock price and indicators using linear regression?
+
+We could not accurately predict the stock price as the weighted average
+error of our results was about 7 based on the RMSE. In this scenario, 7
+is a large effect, especially since we measured in percent change. We
+can see our prediction model visualized in section 3, part a. We can see
+that the predicted prices do not come close to actual prices often, so
+the value of our RMSE seems accurate. My findings have definitely piqued
+my interest in trying other models and finding more variables if I was
+to tackle this challenge again.
+
+\textbf{Reflection}
+
+Wei-Yu's Research Question (Linear Model): From our research we tried to
+create a model that captures long-term trends of stock prices. The most
+notable predictors were the MACD and Volume in our linear regression
+model as their p-values were significant at 5\% level when we performed
+the linear regression. We can see in our data set that we have a
+variable `sentiment\_score' that we did not include as predictor
+variable because the API that we used did not allow us to grab enough
+data. We still included in our visualization to see the potential
+relationships under the correlation plot.
+
+Abhinav's Research Question (Classifier): From the classifier decision
+tree results, we realized that the models perform decently well for
+stock market data, with a cross validation score accuracy hovering
+around 60\%. One interesting observation is that we realized that from
+both cross validation and also the time series validation, the
+classifier model performs relatively well and is able to get around the
+same accuracy. This is in contrast to the linear regression model
+because the regression model does not perform very well on the cross
+validation data (with an R\textsuperscript{2} of 0.17, which is
+significantly less than the time series CV of 0.52. This model is
+generally okay with new sorts of data as shown by the cross validation
+scores, and for this research question we can say that the classifier
+model can actually identify whether stocks are a good buy of gaining
+over 3\% in value over the month period defined by ``percent change''
+
+\textbf{What was challenging?}
+
+Our project became more difficult than expected because we did not
+realize how different of an approach we had to take when analyzing time
+series. Our visualizations needed a `date' data type to be displayed
+properly. We needed to transform our stock price variable to account for
+future values and predict based on that instead of predicting on
+`stationary' data. Also, to account for fluctuating variance in prices,
+everything had to be a relative measurement otherwise, we would not be
+holding the effects of time fixed. The same concept was also applied to
+our predictor variables. When it came to cross-validation, again, we
+faced the problematic attributes of time series. Normal cross-validation
+scrambles up all the data points, which is troublesome because we can
+not mix up future and past data points. This is because stock market
+conditions are very variable depending on the time of year, and this
+mixed sampling of cross validation will not provide us with high quality
+data for predicting stock prices in the same time period. The most
+challenging part was discovering these situations and accommodating our
+data to have valid results.
+
+Another difficult aspect of this project is to assemble these stock
+market indicators by ourselves. There is a lot of freedom to try
+different sorts of variables, intervals, and calculation methods to get
+stock market indicators, and there is definitely no one perfect way of
+gathering indicator data. Also, we had to rely on an API, which gave us
+the problem of having too much data. We had to shorten our search to
+only one sort of ticker symbol for the purposes of this project.
+
+Overall, here is a general summary of our model and the variables that
+are involved with it:
+
+\begin{itemize}
+\item
+  our models capture general trends of stock prices for this particular
+  case
+\item
+  MACD and RSI values are significant predictors for linear regression
+\item
+  Our decision tree classifier favors more complex structure and is
+  relatively good at predicting whether a stock is a good buy or not
+  (AUC \textasciitilde{} 0.89).
+\item
+  Sentiment Scores are almost worthless for our stock market analysis,
+  since they are not significantly correlated with any of the other
+  variables
+\end{itemize}
+
+\textbf{Acknowledgements}
+
+Abhinav Bichal (data preparation, classification, cross validation)
+
+Wei-Yu Chiang (linear regression, clustering, cross validation)
+
+References for stock market indicators:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  MACD Calculation:
+\end{enumerate}
+
+Source: Investopedia. ``Moving Average Convergence Divergence (MACD).''
+\href{https://www.investopedia.com/terms/m/macd.asp}{\textbf{https://www.investopedia.com/terms/m/macd.asp}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  RSI Calculation:
+\end{enumerate}
+
+Source: Investopedia. ``Relative Strength Index - RSI.''
+\href{https://www.investopedia.com/terms/r/rsi.asp}{\textbf{https://www.investopedia.com/terms/r/rsi.asp}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  SMA Calculation:
+\end{enumerate}
+
+Source: Investopedia. ``Simple Moving Average (SMA).''
+\href{https://www.investopedia.com/terms/s/sma.asp}{\textbf{https://www.investopedia.com/terms/s/sma.asp}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  EMA Calculation:
+\end{enumerate}
+
+Source: Investopedia. ``Exponential Moving Average (EMA).''
+\href{https://www.investopedia.com/terms/e/ema.asp}{\textbf{https://www.investopedia.com/terms/e/ema.asp}}
+
+\emph{About yfinance data and Python usage:} During the course of our
+project, we used Python for data collection under Yahoo Finance. Both
+members of the group learned Python through self teaching and also
+through college classes that go over data science concepts in Python
+(Abhinav learned Python through Big Data in Biology FRI stream, and
+Wei-Yu through online classes going over data science in finance).
+Despite our different backgrounds, we were able to collaborate
+effectively using our combined skills and experience. Python packages of
+Pandas and scikit were used to manipulate and engineer stock market
+data.
+
+For more information on how we collected data, here is our GitHub link:
+
+\href{https://github.com/thabat12/stock_predictions/tree/master}{thabat12/stock\_predictions
+(github.com)}
+
+\end{document}
