@@ -413,7 +413,7 @@ Our cross-validation method had to account for our data being a time-series. We 
 
 **Linear Regression CV Results**
 
-The results above does not provide an accuracy because we are attempting to predict a numeric variable and not categorical. Instead we can look at the RMSE of 7.675412 which is very high pertaining to this scenario. This means on average our predictions for the stock's percent change for the day is off by 7.67. The R-Squared value is not a very favorable measure in determining the strength of our model because we are dealing with factors such as trends and non-stationary values that grow over time.
+The results above do not provide accuracy because we are attempting to predict a numeric variable and not a categorical one. Instead, we can look at the RMSE of 7.675412, which is very high pertaining to this scenario. This means, on average, our weighted error between actual and predicted is off by about 7. The R-Squared value is not a very favorable measure in determining the strength of our model because we are dealing with factors such as trends and non-stationary values that grow over time.
 
 **Over fitting**
 
@@ -567,6 +567,20 @@ aapl %>%
 
 ## 6. Discussion
 
+**Wei-Yu's Research Findings**
+
+Q: How accurately can we predict the stock price in two weeks with the current day's stock price and indicators using linear regression?
+
+We could not accurately predict the stock price as the weighted average error of our results was about 7 based on the RMSE. In this scenario, 7 is a large effect, especially since we measured in percent change. We can see our prediction model visualized in section 3, part a. We can see that the predicted prices do not come close to actual prices often, so the value of our RMSE seems accurate. My findings have definitely piqued my interest in trying other models and finding more variables if I was to tackle this challenge again.
+
+**Reflection**
+
+From our research we tried to create a model that captures long-term trends of stock prices. The most notable predictors were the MACD and Volume in our linear regression model as their p-values were significant at 5% level. We can see in our data set that we have a variable 'sentiment_score' that we did not include as predictor variable because the API that we used did not allow us to grab enough data. We still included in our visualization to see the potential relationships.
+
+**What was challenging?**
+
+Our project became more difficult than expected because we did not realize how different of an approach we had to take when analyzing time series. Our visualizations needed a \'date\' data type to be displayed properly. We needed to transform our stock price variable to account for future values and predict based on that instead of predicting on \'stationary\' data. Also, to account for fluctuating variance in prices, everything had to be a relative measurement otherwise, we would not be holding the effects of time fixed. The same concept was also applied to our predictor variables. When it came to cross-validation, again, we faced the problematic attributes of time series. Normal cross-validation scrambles up all the data points, which is troublesome because we can not mix up future and past data points. The most challenging part was discovering these situations and accommodating our data to have valid results.
+
 here we should include these points:
 
 -   our models capture general trends of stock prices for this particular case
@@ -580,7 +594,5 @@ here we should include these points:
     -   generating our own stock market data and using APIs was very interesting
 
     -   using github to work together is was helpful
-
--   our individual contribution parts: abhinav talks about his models and draws conclusions from them, wei-yu does the same and we all answer our research questions
 
 -   the rest of the discussion should be about our pam clustering, how well our trained models predict stock prices, and how RSI and MACD values were automatically inferred and good vs. bad stock prices were also separated well
