@@ -8,9 +8,6 @@ date: "2023-04-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{}
-```
-
 ```{r}
 library(tidyverse)
 library(ggcorrplot)
@@ -68,6 +65,36 @@ We utilized the Yahoo Finance Python API to get up-to-date information on stock 
 
     -   **relationship:** we speculate that the distance of MACD signal \* slope correlates with whether the stock price increases or decreases over a certain period of time.
 
+-   **MACD-NEW (Engineered Variable Based off of MACD Values)**
+
+    ![](images/macdnew.png)
+
+    -   This is a variable that we engineered in Python, and its purpose is to act as a "signal" that gives more information on whether the macd signal line is near the actual macd. This is critical for us to determine the "when" for a stock being a good buy or not
+
+    -   The MACD-NEW should be correlated with the percent change in price, such that a positive value of this should generally indicate an upwards movement of price, and a negative value generally indicates a downward motion. However, the signal we made can be a bit "messy" since there are a lot of moving factors that go into stock prices. (we will visualize this signal in the assignment to better represent what's going on). **relationship:** closer distance means higher signal intensity, and a negative slope means that differences are closing in. Therefore, negative MACD-NEW values should be correlated in theory to upwards price movements.
+
+    -   One thing to note here is that the slope and tanh activation function may be modified to get different sorts of MACD-NEW signals, and that is something that we should try to tweak in the future to get cleaner signal data.
+
+-   **Sentiment Score (r/stocks subreddit mentions of AAPL - we didn't use it but it is interesting)**
+
+    -   This is top Reddit comments that mention the keyword "AAPL", and we ran VADER sentiment analysis to get a compound sentiment score for a particular stock on that particular day. The sentiment scores were not very useful so we decided not to include this in our data, since the dates for sentiment scores were not consistently after each other and we lost a lot of data for chronological stock prices in this way. **relationship:** we do not expect there to be any significant relationship with sentiment scores because Reddit data is not very structured/ organized for stocks.
+
+-   **Percent Change in 2 Week Period (Numeric Response Variable)**
+
+![](images/explanation.png)
+
+This is a visualization of what our percent change calculation looks like. Because the technical indicators that we are using are intended to capture more long term data, we consider a "future" stock price to be reflected by a period of 30 days after a certain number of interval days. The +10 day time and 30 day window seemed to be the best estimate for our stock price predictions because it generally captures the best summary of our technical indicators for the long term future. We tried other intervals (including price the day right after), but longer term capture of future stock prices seem to be the best performing for our model.
+
+We expect that this variable is relatively more correlated with the technical indicators such that higher percent changes correlate with lower RSI values, and lower MACD also correlate with higher percent changes. We also hope to see that our MACD-NEW, which is a calculation of our macd signal differences, will have a negative relationship to correlate with higher percent changes.
+
+-   **Good Buy (Categorical Response Variable)**
+
+    -   This is the variable that we coded into our data set, and it basically distinguished good stocks as stocks that **increase by at least 3%** in the period of time defined by percent change. All other stocks are considered "bad stocks"
+
+    -   We made this categorical variable for our classification algorithm, and this threshold evenly divides our stock prices as good or bad, which means that we have roughly a 50/50 split of representation of this variable in our dataset.
+
+    -   We predict that this variable also has the same correlation relationships as "percent change", and that is because we hope to see that oversold stocks mean that there will be a higher percent change, and vice-versa.
+
 ### c. Research Questions
 
 **Wei-Yu's Research Question:**
@@ -76,13 +103,13 @@ How accurately can we predict the stock price next day from stock indicators wit
 
 **Abhinav's Research Question:**
 
-Given a particular stock based on sentimental value, can we predict if the price will increase or decrease?
+Given that a good stock is a price that increases by at least 3% in the period of time defined by "percent change", can we classify/ separate stocks as being a good or bad buy based on the technical indicators using a classifier?
 
 ## 2. Exploratory Data Analysis
 
 ### a. Reading in the Data (Stock Adjusted Closing Prices & Sentiment Scores)
 
-The data is derived from Yahoo Finance and we calculated the technical indicators in Python. Sentiment data is derived from Vader Sentiment Analysis scores off of Reddit data in "r/stocks". The stocks are classified in this project as either being a "good buy" or not. To be a "good buy" stock, the price must increase by at least 3% in the next two week period. If not, the stock is not considered to be a good buy.
+The data is derived from Yahoo Finance and we calculated the technical indicators in Python. Sentiment data is derived from Vader Sentiment Analysis scores off of Reddit data in "r/stocks". The stocks are classified in this project as either being a "good buy" or not. To be a "good buy" stock, the price must increase by at least 3% in percent change period. If not, the stock is not considered to be a good buy.
 
 ```{r}
 # reading in the data given to us
@@ -139,6 +166,9 @@ aapl <- aapl %>%
   mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
   select(-sma, -ema)
 
+aapl <- aapl %>%
+  mutate(ema_sma_diff = ema_diff - sma_diff)
+
 head(aapl_sentiment)
 ```
 
@@ -147,17 +177,18 @@ head(aapl_sentiment)
 We will consider all variables for the correlation analysis in order to see whether stocks are a good buy or not. We removed the date, ticker, and adjusted close values because these data points are not generally correlated with any indicators, since their values may be arbitrary. We did include the two macd signals because they revealed to be correlated in some significant way with whether the stock was a good buy, and that might lead us to some interesting findings. However, it is important to note that the macd signal and macd line will naturally be correlated to each other since they do generally follow each other, but we should ignore this fact in this graph.
 
 ```{r}
-
 #demonstrating correlation of variables with only Apple stocks
 aapl_sentiment %>%
   select(-date,-ticker, -adj_close, -ema_diff, -sma_diff) %>%
   cor %>%
   ggcorrplot
+
+# NOTE: for our actual model analysis, we did not include sentiment score because adding this variable deletes some crucial dates from the stock market prediction and means that our cross validation cannot be run chronologically, which means that seasonal stock market data reflections are not possible to be made 
 ```
 
 ### **Correlation Matrix**
 
-The highest correlated variables are macd and macd-signal, but that is expected because of the fact that these lines are similary calculated. Looking past that, we want to pay attention to "good_buy", because that is the variable that tells us whether the stock price increases by over 3% in the next 2 weeks. When taking a look at this, we notice that a stock being a good buy is relatively more corrrelated with "macd", "macd_signal", and "percent_change" (this is obviously the most correlated since that indicates the percent change". There is a slight positive correlation with "macd_new", which is our own calculated indicatior that tells us the "strength" of a macd line crossing or not. Another variable to consider is the sentiment score. This score will calculate the sentiment of users on Reddit about a particular stock on a certain day. We notice that this variable is not very correlated with any others, so that is not a good sign for our prediction model.
+The highest correlated variables are macd and macd-signal, but that is expected because of the fact that these lines are similary calculated. Looking past that, we want to pay attention to "good_buy", because that is the variable that tells us whether the stock price increases by over 3% in the future period. When taking a look at this, we notice that a stock being a good buy is relatively more corrrelated with "macd", "macd_signal", and "percent_change" (this is obviously the most correlated since that indicates the percent change". There is a slight positive correlation with "macd_new", which is our own calculated indicatior that tells us the "strength" of a macd line crossing or not. Another variable to consider is the sentiment score. This score will calculate the sentiment of users on Reddit about a particular stock on a certain day. We notice that this variable is not very correlated with any others, so that is not a good sign for our prediction model.
 
 Overall, the highest correlations are present with MACD indicators and whether a stock is a good buy, and the lowest correlation is generally between any pair of indicators that are used with the sentiment scores.
 
@@ -213,56 +244,77 @@ The simple moving average is calculated based on the prices of previous days. It
 
 ### **b. Abhinav's Visualizations**
 
-#### iii. Sentiment Score Visualizations
+#### iii. Good Buy Stocks with MACD-NEW
 
-We were curious to see if sentiment scores from Reddit reflect anything about future prices of the stock market. However, after looking at these visualizations, one thing we learned is that using social media (specifically Reddit) to measure stock prices is usually not a good idea!
+Because we did create our own technical indicator from MACD signals, we want to see if this indicator has any meaning or if there is simply just too much noise for the indicator. In order to do this, compared the distribution of the MACD-NEW values with whether a stock is a good buy or not. To also understand this in terms of other technical indicators, we also added a couple more variables in the graph to see what variables truly are better indicators for telling us if a stock is a good buy or not.
 
 ```{r}
+# making 3 similar box plots for side-by-side visualization 
+md_new_plot <- aapl %>%
+  ggplot(aes(x = macd_new)) + 
+  geom_boxplot() +
+  facet_wrap(~good_buy) +
+  labs(title = 'Good buy (>= 3% increase) vs. Indicators') + 
+  ylab('MACD-NEW')
 
-stock_plot <- aapl %>%
-  slice(150:200) %>%
-  ggplot() +
-  geom_line(aes(x = date, y = adj_close)) +
-  labs(title = 'Actual Stock Price of AAPL',
-       x = 'Date',
-       y = 'Adjusted Closing Price')
+rsi_plot <- aapl %>%
+  ggplot(aes(x = rsi)) +
+  geom_boxplot() +
+  facet_wrap(~good_buy) + 
+  ylab('RSI')
 
-sentiment_plot <- aapl_sentiment %>%
-  slice(100:200) %>%
-  ggplot(aes(x = date, y = sentiment_score)) +
-  geom_line() + 
-  labs(title = 'Corresponding Average Sentiment Score of r/stocks Subreddit',
-       x = 'Date',
-       y = 'Average Sentiment Score (VADER)')
+md_plot <- aapl %>%
+  ggplot(aes(x = macd)) +
+  geom_boxplot() +
+  facet_wrap(~good_buy) + 
+  ylab('MACD')
 
-grid.arrange(stock_plot,sentiment_plot, ncol=1)
+grid.arrange(md_new_plot, md_plot, rsi_plot, ncol=1, nrow=3)
 ```
 
-As stock prices go down, we are able to see a relative sharp spike down in sentiment scores. However, anytime else sentiment scores are usually very random and that is due to sampling errors that we may have got from the sentiment score data. This is a great moment to realize that *using social media such as Reddit to make financial decisions related to buying stocks is not a good idea.* Although we were a bit disappointed that these sentiment scores are not very clear in their relationship with stock prices, we know now that social media for stock prices is not a good reference to look at. Maybe we should consider better sources for stock price predictions in the future.
+Except for the MACD singal having a lower median value below 0 for good buy stocks, the technical indicators seem to have no real signficant difference in population distributions for whether a stock is a good buy or not. However, when we do take a look at stock market data, we notice that these indicators are indeed related to price movements of stocks and future movements as well. One reason to explain why this happens is because stock market prices are very prone to fluctuation, and there are plenty of different sorts of market conditions (bull vs bear runs) for stock prices. These fluctuations ultimately mean that stock market indicators cannot be the final verdict for generalizing stock price movements for *any* time of year. And this is actually very true if we take a look at one more visualization:
+
+```{r}
+price <- ggplot(aapl %>% slice(100:200), aes(x = date, y = adj_close)) +
+  geom_line()
+
+md_new <- ggplot(aapl %>% slice(100:200), aes(x = date, y = macd_new)) +
+  geom_line() +
+  geom_hline(yintercept = 0, color = 'red')
+
+# taking a look at shorter term price data... we can see that there is a lot of signal noise in the data, but higher values of signals generally occur when stock price goes down, and vice-versa for lower values
+grid.arrange(price, md_new, ncol=1)
+```
 
 #### iv. RSI and MACD Relationship with Price Changes
 
 Taking the two most correlated variables in the correlation plot, we can inspect the relationship between RSI, MACD, and whether the stock was a good buy along with the corresponding percent change of that stock price.
 
 ```{r}
-aapl_sentiment %>%
-  ggplot(aes(x = sentiment_score, y = percent_change, shape = good_buy)) +
-  geom_point()
-
-aapl_sentiment %>%
+# checking to 
+aapl %>%
+  mutate(good_buy = factor(good_buy, levels = c(T, F), labels = c('GOOD BUY', 'BAD BUY'))) %>%
   ggplot(aes(x = rsi, y = macd, color = percent_change)) + 
   geom_point(aes(shape = good_buy)) +
   geom_smooth(method = 'lm') + 
   labs(title = 'RSI and MACD Lines for Good and Bad Stock Purchases',
        x = 'Relative Strength Index',
-       y = 'Moving Average Convergence/ Divergence')
+       y = 'Moving Average Convergence/ Divergence') + 
+  theme_minimal() + 
+  labs(shape = 'Type',
+       color = 'Percent Change') +
+  annotate("text", x = 75, y = -4, label = "Good Buy Region", color = "blue", size = 5) +
+  annotate('text', x = 16.5, y = 4, label = 'Bad Buy Region', color = 'red', size = 5)
+
+
+
 ```
 
-From the visualization above, we realize that there is actually a very interesting trend of RSI values and MACD! As RSI increases, we notice that MACD also increases, and that makes sense because both indicators are calculated using exponential weighted means. However, one trend that is interesting is that above this linear regression line of RSI and MACD, we mostly have "BAD" stocks, and below this line, we mostly have "GOOD" stocks. This means that above the regression line we notice stocks that generally go down and below are stocks that go up.
+From the visualization above, we realize that there is actually a very interesting trend of RSI values and MACD! As RSI increases, we notice that MACD also increases, and that makes sense because both indicators are calculated using exponential weighted means that are related to each other. However, one trend that is interesting is that above this linear regression line of RSI and MACD, we mostly have "BAD" stocks, and below this line, we mostly have "GOOD" stocks. This means that above the regression line we notice stocks that generally go down and below are stocks that go up.
 
 This is a complicated relationship, so here is a bullet point list of each interaction that is going on here:
 
--   lower MACD values generally have better stocks to buy, why?
+-   lower MACD under a relative RSI value generally have better stocks to buy, why?
 
     -   because lower MACD lines typically indicate that a stock is also being oversold, and if a stock is oversold, it will generally rise in price
 
@@ -276,7 +328,7 @@ This is a complicated relationship, so here is a bullet point list of each inter
 
     -   For any given RSI value, we know that being lower (around 30) generally means that stock prices have a tendency to increase. Now, with MACD values which are ALSO lower, we have a consensus on two types of indicators. Because both indicators agree on this stock being oversold, we have a higher probability that the stock price is indeed oversold, meaning that the price is MORE LIKELY to tend upwards!
 
-    -   So for any given RSI value that is low, an even lower MACD value (below regression line) more strongly indicates that the stock is being oversold. The stock is more likely to tend upwards due to this, hence we see more stocks as a good buy underneath this line!
+    -   So for any given RSI value that is low, an even lower MACD value (below regression line) more strongly indicates that the stock is being oversold. The stock is more likely to tend upwards due to this, hence we see more stocks as a good buy underneath this line.
 
 ## 3. Prediction and Cross-validation
 
@@ -331,17 +383,28 @@ pred_lin %>%
 
 #### ii. Cross Validation of Linear Regression Model
 
+**We were told to use cross validation for our predictions, but we also compared this with the time slice validation method because:**
+
+-   stock market conditions change over time: sometimes, we might have an upwards trend in the market, and other times the trend may be downwards/ stagnant
+
+-   seasonal changes to stock market conditions l
+
 ```{r}
 # we are using train control here to make slices based on chronological order
 TimeControl <- trainControl(method = 'timeslice',
                             initialWindow = 45,
                             horizon = 10)
 
+foldControl <- trainControl(method = 'cv', number = 7) # 7 fold cv
+
+
 # training cross validation model
 lin_cv <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'lm', trControl = TimeControl)
 
-lin_cv
+lin_cv_fold <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'lm', trControl = foldControl)
 
+lin_cv
+lin_cv_fold
 ```
 
 **Time-Series Cross-Validation**
@@ -390,34 +453,43 @@ Reflection of AUC score: We got an excellent AUC score, but we should also keep 
 
 #### iv. Performing Cross Validation with Decision Trees
 
+comparing
+
 ```{r}
 # we are using train control here to make slices based on chronological order
 TimeControl <- trainControl(method = 'timeslice',
-                            initialWindow = 45,
-                            horizon = 10)
+                            initialWindow = 200,
+                            horizon = 20)
+
+foldControl <- trainControl(method = 'cv', number = 7) # 7 fold cv
+
 
 # training cross validation model
-rpart_cv <- train(percent_change~ema_diff + rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl, method = 'rpart', trControl = TimeControl)
+rpart_cv <- train(good_buy~ rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl %>% mutate(good_buy = as.factor(good_buy)), method = 'rpart', trControl = TimeControl)
+
+rpart_cv_folds <- train(good_buy~ rsi + volume + macd + macd_signal + macd_new + sma_diff + ema_diff, data = aapl %>% mutate(good_buy = as.factor(good_buy)), method = 'rpart', trControl = foldControl)
 
 # taking a look at the cross-validation results
 rpart_cv
+
+rpart_cv_folds
 ```
 
-**Summary:** The results of the classification model decision tree using a 6 fold cross validation score is shown above. The model is built using 500 stock market data points and 7 predictor variables. The cross validation results are summarized using 3 different cost complexity parameters. The model metrics are summarized on average for C.V. using the three different metrics, Root Mean Squared-Error, R-squared value, and Mean Absolute Error. As we can see, the lowest MAE, highest R\^2, and lowest RMSE is generally tending towards the complexity parameter being equal to 0.0472... This shows us that generally *larger* decision trees perform better with the nature of this data.
+**Summary:** The results of the classification model decision tree using a 7 fold cross validation score is shown above. The model is built using 500 stock market data points and 7 predictor variables. The cross validation model's best accuracy was close to the time series model accuracy, with around 64% accuracy, compared to only 62% for the other model type. The average performance for both sorts of cross validation models is around 60% which is a good sign. We also did a time series comparison of 40 for window size and 10 for horizon, but the model accuracy was very low, near a 50% level, and that is not included in these results.
 
-Overall, the model is not very good at predicting new observations. At best, the model may explain about 10% of the variation (R\^2 value of the best scoring cp model), which is not terrible in the sense that the model is completely "clueless", but it is also not a very reliable decision maker for predicting stock prices.
+Unlike the regression model, this 7 fold cross validation score ended up resulting in similar performance to the best time series cross validation that we found, and that is an interesting observation that reveals to us that the classification model works better with more data input to it. Also, the model works better with more complex data, as we realize that the highest performing one has a cp value of the lowest level o 0.0426, which indicates that the decision tree is more complex than the other sorts of cross validation that it was trained on.
 
 Now, to answer the questions on the document:
 
 -   are there any signs of overfitting?
 
-    -   There is a sign of overfitting. The model performs surprisingly well when trained on all data points and calculating the ROC of itself. However, under cross validation scores, we notice a significant drop in performance, indicating the that model is not very good at adapting to new sorts of stock market data.
+    -   There is a sign of overfitting. The model performs surprisingly well when trained on all data points and calculating the ROC of itself. The classification is not the best, but the model is noticing some patterns that are worth looking into later on.
 
-    -   we might want to consider including more ticker symbols in the future for better predictions and **higher variance** in the future to try to fit stock market data better, but bringing in more data might also add on to the noise in our stock market data.
+    -   we might want to consider including more ticker symbols in the future for better predictions and higher variance in the future to try to fit stock market data better, but bringing in more data might also add on to the noise in our stock market data.
 
 ### c. Comparing Decision Trees to Linear Regression - Which Model is More Reliable?
 
-Comparing the two models, we would go with linear regression as the better one because of it's lower RMSE score. The lower the score means the closer our predictions come to the actual data.
+Comparing the two models, we would go with linear regression as the better one because of it's lower RMSE score. The lower the score means the closer our predictions come to the actual data. However, the linear regression model does struggle to perform well when trained on the cross validation data for random sampling, and that indicates that the regression model is better performing on data that is chronological/ around the same time period. This may be reflected by changing market conditions that alter the behavior of stock prices relative to their indicator values, and linear regression may only be effective when looking at windows of time at once.
 
 ## 4. Dimensionality Reduction
 
