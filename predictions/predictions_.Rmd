@@ -27,7 +27,7 @@ library(rpart.plot)
 
 ## 1. Title & Introduction
 
-### **Classification and Prediction: Stock Prices**
+### **Classification and Prediction:** Predicting Stock Prices of AAPL Using Technical Indicators
 
 By: Abhinav Bichal, Wei-Yu Chiang
 
@@ -281,7 +281,8 @@ Except for the MACD singal having a lower median value below 0 for good buy stoc
 
 ```{r}
 price <- ggplot(aapl %>% slice(100:200), aes(x = date, y = adj_close)) +
-  geom_line()
+  geom_line() + 
+  labs(title = 'Stock Price (Above) and MACD-NEW (Below)')
 
 md_new <- ggplot(aapl %>% slice(100:200), aes(x = date, y = macd_new)) +
   geom_line() +
@@ -421,7 +422,7 @@ Our cross-validation method had to account for our data being a time-series. We 
 
 **Linear Regression CV Results**
 
-The results above do not provide accuracy because we are attempting to predict a numeric variable and not a categorical one. Instead, we can look at the RMSE of 7.675412, which is very high pertaining to this scenario. This means, on average, our weighted error between actual and predicted is off by about 7. The R-Squared value is not a very favorable measure in determining the strength of our model because we are dealing with factors such as trends and non-stationary values that grow over time.
+The results above do not provide accuracy because we are attempting to predict a numeric variable and not a categorical one. Instead, we can look at the RMSE of 8.005, which is very high pertaining to this scenario. *Note that results may vary depending on the seed set before running this cross validation. T*his means, on average, our weighted error between actual and predicted is off by about 7. The R-Squared value is not a very favorable measure in determining the strength of our model because we are dealing with factors such as trends and non-stationary values that grow over time.
 
 **Over fitting**
 
@@ -563,7 +564,7 @@ Two clusters seem to be ideal due to the high dropoff of silhouette width after 
 pam_results <- aapl_scaled %>%
   pam(k = 2)
 
-fviz_cluster(pam_results)
+fviz_cluster(pam_results, title = 'PCA of AAPL Adj Close Stock Prices Based on Indicator Data \n(71.6% Explained Variance)')
 ```
 
 ### b. Summary Statistics of PAM Clustering and Observations of Clusters
@@ -576,6 +577,14 @@ aapl %>%
   mutate(cluster = as.factor(pam_results$clustering)) %>%
   group_by(cluster) %>%
   summarize_if(is.numeric, mean, na.rm = T)
+```
+
+```{r}
+aapl %>%
+  mutate(cluster = as.factor(pam_results$clustering)) %>%
+  group_by(cluster) %>%
+  summarize_if(is.numeric, mean, na.rm = T) %>%
+  select(cluster, rsi, macd, percent_change)
 ```
 
 The PAM clustering actually gave us some very interesting data:
