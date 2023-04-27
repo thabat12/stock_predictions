@@ -98,8 +98,7 @@ We expect that this variable is relatively more correlated with the technical in
 ### c. Research Questions
 
 **Wei-Yu's Research Question:**
-
-How accurately can we predict the stock price next day from stock indicators with linear regression?
+How accurately can we predict the stock price in two weeks with the current day\'s stock price and indicators using linear regression?
 
 **Abhinav's Research Question:**
 
@@ -164,7 +163,7 @@ aapl_sentiment <- aapl_sentiment %>%
 # selecting out the bad variables from aapl
 aapl <- aapl %>%
   mutate(sma_diff = adj_close - sma, ema_diff = adj_close - ema) %>%
-  select(-sma, -ema)
+  select(-ema)
 
 aapl <- aapl %>%
   mutate(ema_sma_diff = ema_diff - sma_diff)
@@ -203,20 +202,23 @@ Overall, the highest correlations are present with MACD indicators and whether a
 aapl_price <- aapl %>%
   slice(1:100) %>%
   ggplot()+
-  geom_line(aes(x = date,y=adj_close))
+  geom_line(aes(x = date,y=adj_close)) + 
+  labs(y = 'Adjusted Close')
 
 aapl_rsi <- aapl %>%
   slice(1:100) %>%
   ggplot(aes(x=date,y=rsi)) +
   geom_line() + 
   geom_hline(yintercept = 70, linetype='dashed', color = 'orange') +
-  geom_hline(yintercept = 30, linetype='dashed', color = 'orange')
+  geom_hline(yintercept = 30, linetype='dashed', color = 'orange') +
+  labs(y = 'RSI')
 
 percent_change <- aapl %>%
   slice(1:100) %>%
   ggplot(aes(x = date, y = percent_change)) +
   geom_line() +
-  geom_hline(yintercept = 0, color = 'red')
+  geom_hline(yintercept = 0, color = 'red') + 
+  labs(y = 'Percent Change')
 
 grid.arrange(aapl_price,aapl_rsi,percent_change, ncol=1)
 ```
@@ -230,12 +232,15 @@ The RSI is separated from the graph because it is calculated from the percentage
 #### ii. Simple Moving Average
 
 ```{r}
-data %>% 
-  filter(ticker=='AAPL') %>%
-  slice(100:200) %>%
+aapl %>% 
+  slice(0:300) %>%
   ggplot() +
   geom_line(aes(x=date,y=adj_close)) +
-  geom_line(aes(x=date,y=ema),color='red')
+  geom_line(aes(x=date,y=sma),color='red')
+
+# we visualized SMA here, but we dont need it anymore since "sma_diff" is basically more valuable than SMA for our future predictions 
+aapl <- aapl %>%
+  select(-sma)
 ```
 
 **Simple Moving Average**
@@ -354,7 +359,9 @@ pred_lin <- aapl %>%
 pred_lin %>% 
   ggplot() +
   geom_line(aes(x=date,y=percent_change)) +
-  geom_line(aes(x=date,y=predictions),color='red')
+  geom_line(aes(x=date,y=predictions),color='red') +
+  labs(title = 'Actual Percent Change Over The Next Month vs. \nPredicted Percent Change (Black = Actual, Red = Predicted)')
+
 
 # the predicted error for new data being seen, the Root mean squared error
 rmse(pred_lin$percent_change,pred_lin$predictions)
@@ -377,7 +384,8 @@ pred_lin %>%
   geom_hline(yintercept = 0, linetype='dashed', color = 'orange') + 
   scale_color_manual(name = 'Type', 
                      values = c('Actual Price' = 'black', 'Predicted' = 'red'),
-                     labels = c('Actual Price', 'Predicted'))
+                     labels = c('Actual Price', 'Predicted')) +
+  labs(title = 'Actual Percent Change Over The Next Month vs. \nPredicted Percent Change (Black = Actual, Red = Predicted)')
   
 ```
 
@@ -537,6 +545,8 @@ fviz_pca_ind(pca)
 
 ## 5. Clustering
 
+### a. PAM Clustering and Reason Why We Chose This Method
+
 **PAM Clustering**
 
 We decided to use the PAM clustering algorithm because PAM clustering is less sensitive to outlier data because the medioid points are actually just the points themselves. If we were to use K-means, outliers could skew the clustering towards either extreme ends of our data, which is not what we would like.
@@ -556,14 +566,39 @@ pam_results <- aapl_scaled %>%
 fviz_cluster(pam_results)
 ```
 
+### b. Summary Statistics of PAM Clustering and Observations of Clusters
+
 #### Summary statistics of our two different clusters
 
 ```{r}
+# we can get the summary of these clusters by grouping by these specific clusters given to us and talking about their relevance 
 aapl %>%
   mutate(cluster = as.factor(pam_results$clustering)) %>%
   group_by(cluster) %>%
   summarize_if(is.numeric, mean, na.rm = T)
 ```
+
+The PAM clustering actually gave us some very interesting data:
+
+-   Cluster 1 is grouped with OVERSOLD stocks
+
+    -   RSI value average is around 30, which is a standard value threshold for oversold stocks
+
+    -   MACD value is negative, which is also indicative of oversold stocks
+
+    -   percent change is near 3%, which is close to our threshold of "good buy" stocks!
+
+-   Cluster 2 is grouped with generally OVERBOUGHT stocks
+
+    -   RSI value is near 70, which is the standard value of overbought stocks
+
+    -   MACD is positive, which is also in conesnsus with a high RSI value
+
+    -   The percent change of stock price is near 0.5 - 0%, which indicates either rapid fluctuations or generally decreasing stock prices.
+
+    -   For this sort of cluster, we cannot be sure that stock prices are a good buy or not, so they are not classified to be as such either!
+
+**The most exciting result is that the RSI values are close to the actual standard RSI value threshold for stocks at 30 and 70 for oversold and overbought stocks, respectively. This is a good sign that our model is on the right track and that the technical indicators are doing the right job. Also this is a good indicator that our response variable is also accurately captured in the long term trends of price if it's associated with RSI and MACD values that make sense.**
 
 ## 6. Discussion
 
@@ -575,24 +610,54 @@ We could not accurately predict the stock price as the weighted average error of
 
 **Reflection**
 
-From our research we tried to create a model that captures long-term trends of stock prices. The most notable predictors were the MACD and Volume in our linear regression model as their p-values were significant at 5% level. We can see in our data set that we have a variable 'sentiment_score' that we did not include as predictor variable because the API that we used did not allow us to grab enough data. We still included in our visualization to see the potential relationships.
+Wei-Yu's Research Question (Linear Model): From our research we tried to create a model that captures long-term trends of stock prices. The most notable predictors were the MACD and Volume in our linear regression model as their p-values were significant at 5% level when we performed the linear regression. We can see in our data set that we have a variable 'sentiment_score' that we did not include as predictor variable because the API that we used did not allow us to grab enough data. We still included in our visualization to see the potential relationships under the correlation plot.
+
+Abhinav's Research Question (Classifier): From the classifier decision tree results, we realized that the models perform decently well for stock market data, with a cross validation score accuracy hovering around 60%. One interesting observation is that we realized that from both cross validation and also the time series validation, the classifier model performs relatively well and is able to get around the same accuracy. This is in contrast to the linear regression model because the regression model does not perform very well on the cross validation data (with an R^2^ of 0.17, which is significantly less than the time series CV of 0.52. This model is generally okay with new sorts of data as shown by the cross validation scores, and for this research question we can say that the classifier model can actually identify whether stocks are a good buy of gaining over 3% in value over the month period defined by "percent change"
 
 **What was challenging?**
 
-Our project became more difficult than expected because we did not realize how different of an approach we had to take when analyzing time series. Our visualizations needed a \'date\' data type to be displayed properly. We needed to transform our stock price variable to account for future values and predict based on that instead of predicting on \'stationary\' data. Also, to account for fluctuating variance in prices, everything had to be a relative measurement otherwise, we would not be holding the effects of time fixed. The same concept was also applied to our predictor variables. When it came to cross-validation, again, we faced the problematic attributes of time series. Normal cross-validation scrambles up all the data points, which is troublesome because we can not mix up future and past data points. The most challenging part was discovering these situations and accommodating our data to have valid results.
+Our project became more difficult than expected because we did not realize how different of an approach we had to take when analyzing time series. Our visualizations needed a 'date' data type to be displayed properly. We needed to transform our stock price variable to account for future values and predict based on that instead of predicting on 'stationary' data. Also, to account for fluctuating variance in prices, everything had to be a relative measurement otherwise, we would not be holding the effects of time fixed. The same concept was also applied to our predictor variables. When it came to cross-validation, again, we faced the problematic attributes of time series. Normal cross-validation scrambles up all the data points, which is troublesome because we can not mix up future and past data points. This is because stock market conditions are very variable depending on the time of year, and this mixed sampling of cross validation will not provide us with high quality data for predicting stock prices in the same time period. The most challenging part was discovering these situations and accommodating our data to have valid results.
 
-here we should include these points:
+Another difficult aspect of this project is to assemble these stock market indicators by ourselves. There is a lot of freedom to try different sorts of variables, intervals, and calculation methods to get stock market indicators, and there is definitely no one perfect way of gathering indicator data. Also, we had to rely on an API, which gave us the problem of having too much data. We had to shorten our search to only one sort of ticker symbol for the purposes of this project.
+
+Overall, here is a general summary of our model and the variables that are involved with it:
 
 -   our models capture general trends of stock prices for this particular case
 
 -   MACD and RSI values are significant predictors for linear regression
 
--   Sentiment Scores are almost worthless for our stock market analysis
+-   Our decision tree classifier favors more complex structure and is relatively good at predicting whether a stock is a good buy or not (AUC \~ 0.89).
 
--   We should reflect on the process of conducting the project
+-   Sentiment Scores are almost worthless for our stock market analysis, since they are not significantly correlated with any of the other variables
 
-    -   generating our own stock market data and using APIs was very interesting
+**Acknowledgements**
 
-    -   using github to work together is was helpful
+Abhinav Bichal (data preparation, classification, cross validation)
 
--   the rest of the discussion should be about our pam clustering, how well our trained models predict stock prices, and how RSI and MACD values were automatically inferred and good vs. bad stock prices were also separated well
+Wei-Yu Chiang (linear regression, clustering, cross validation)
+
+References for stock market indicators:
+
+1.  MACD Calculation:
+
+Source: Investopedia. "Moving Average Convergence Divergence (MACD)." [**https://www.investopedia.com/terms/m/macd.asp**](https://www.investopedia.com/terms/m/macd.asp)
+
+2.  RSI Calculation:
+
+Source: Investopedia. "Relative Strength Index - RSI." [**https://www.investopedia.com/terms/r/rsi.asp**](https://www.investopedia.com/terms/r/rsi.asp)
+
+3.  SMA Calculation:
+
+Source: Investopedia. "Simple Moving Average (SMA)." [**https://www.investopedia.com/terms/s/sma.asp**](https://www.investopedia.com/terms/s/sma.asp)
+
+4.  EMA Calculation:
+
+Source: Investopedia. "Exponential Moving Average (EMA)." [**https://www.investopedia.com/terms/e/ema.asp**](https://www.investopedia.com/terms/e/ema.asp)
+
+*About yfinance data and Python usage:*
+During the course of our project, we used Python for data collection under Yahoo Finance. Both members of the group learned Python through self teaching and also through college classes that go over data science concepts in Python (Abhinav learned Python through Big Data in Biology FRI stream, and Wei-Yu through online classes going over data science in finance). Despite our different backgrounds, we were able to collaborate effectively using our combined skills and experience. Python packages of Pandas and scikit were used to manipulate and engineer stock market data.
+
+For more information on how we collected data, here is our GitHub link:
+
+[thabat12/stock_predictions (github.com)](https://github.com/thabat12/stock_predictions/tree/master)
+
